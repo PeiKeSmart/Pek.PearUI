@@ -1,9 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pek.PearUI", "Pek.PearUI\Pek.PearUI.csproj", "{7EF3B2C7-60D9-FE0B-1C0B-B5CD76F3345E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{9FA3D6BD-1EC1-3BA5-80CB-CE02773A58D5}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		global.json = global.json
+		NuGet.config = NuGet.config
+		.github\workflows\publish-beta.yml = .github\workflows\publish-beta.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

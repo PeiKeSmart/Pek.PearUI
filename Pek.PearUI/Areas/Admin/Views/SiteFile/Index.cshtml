@@ -1,0 +1,240 @@
+﻿@{
+    Html.AppendTitleParts(T("系统文件").Text);
+
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/dtree.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/font/dtreefont.css");
+}
+<style asp-location="true">
+    .layui-card-header {
+        height: 62px;
+    }
+
+    .folder {
+        width: 45px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .back {
+        width: 25px;
+        height: 20px;
+        object-fit: contain;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-card" style="margin-top: -10px;border-top:1px solid #f7f7f7">
+            <div class="layui-card-body">
+                <div class="dgtable-body">
+                    <table class="layui-hide" id="tablist" lay-filter="tool"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="tool">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">@T("编辑")</a>
+    <a class="layui-btn layui-btn-xs" lay-event="del"> @T("删除")</a>
+</script>
+
+<script type="text/html" id="tool1">
+    {{# if(d.type == 1) { }}
+    <img src="/images/folder.png" class="folder" style="cursor:pointer;" lay-event="openFolder"/>
+    {{# } else { }}
+    <img src="/images/file.png" class="folder" id="openFile"/>
+    {{# } }}
+</script>
+
+<script type="text/html" id="tool2">
+    {{# if(d.content_type == '') { }}
+    <div lay-event="openFolder" style="cursor:pointer;" >{{d.name}}</div>
+    {{# } else { }}
+    <div>{{d.name}}</div>
+    {{# } }}
+</script>
+
+<script type="text/html" id="user-toolbar">
+    {{# if(d.path != '') { }}
+    <button class="layui-btn layui-btn-sm" lay-event="back">
+        <i class="layui-icon layui-icon-return"></i>
+        @T("返回上一级")
+    </button>
+     {{# } }}
+    <button class="layui-btn layui-btn-sm" lay-event="refresh">
+        <i class="layui-icon layui-icon-refresh-1"></i>
+        @T("刷新")
+    </button>
+</script>
+
+<script src="~/js/Storage.js" asp-append-version="true"></script>
+
+<script asp-location="Footer">
+    layui.use(['table', 'jquery', 'common'], () => {
+        var form = layui.form,
+            os = layui.common,
+            table = layui.tab,
+            $ = layui.jquery
+        var _path = '';
+        // 渲染表格
+        var tab = layui.table.render({
+            elem: '#tablist',
+            url: '@Url.Action("GetList")',
+            toolbar: '#user-toolbar',
+            // page: false,
+            height: 'full-100',
+            cellMinWidth: 30,
+            cols: [[
+                { type: 'checkbox' },
+                { field: 'type', align: 'left', width: 55, toolbar: '#tool1' },
+                { field: 'name', title: '@T("文件名")', align: 'left', width: 225, toolbar: '#tool2' },
+                { field: 'size', align: 'center', title: '@T("大小")', width: 120 },
+                { field: 'content_type', align: 'center', title: '@T("文件格式")', width: 100 },
+                { field: 'createTime', align: 'center', title: '@T("创建日期")', width: 180 },
+                { field: 'lastWriteTime', align: 'center', title: '@T("最后修改日期")', width: 180 },
+                { field: 'path', align: 'center', title: '@T("路径")', minWidth: 160, align: 'left' },
+                // { fixed: 'right', align: 'center', toolbar: '#tool', title: '@T("操作")', width: 120 }
+            ]],
+            cellExpandedMode: 'tips',
+            skin: 'line',
+            where: { Path: _path }
+            , path: _path
+            , parseData: (res) => {
+                data = res.images
+                // console.log('返回数据为',res);
+                if (_path != '') {
+                    for (let i = 0; i < data.length; i++) {
+                        data[i].path = _path.replace(/\//g, "/") + '/' + data[i].path
+                    }
+                }
+                return {
+                    "code": res.code, // 解析接口状态
+                    "msg": res.msg, // 解析提示文本
+                    "count": res.count, // 解析数据长度
+                    "data": data // 解析数据列表
+                };
+            },
+            height: 'full-60',
+            id: 'tablist'
+        });
+        window.active = {
+            reload: function () {
+                table.reload('tablist',
+                    {
+                        where: {
+                            Path: _path,
+                        },
+                        path: _path
+                    });
+            },
+        }
+        layui.table.on('toolbar(tool)', function (obj) {
+            // console.log('点了一下：',obj);
+            if (obj.event === 'back') {
+                var path = '';
+                let list = _path.split("/")
+                list.splice(list.length - 1, 1)
+                for (let i = 0; i < list.length; i++) {
+                    console.log(list[i]);
+                    path += (list[i] + '/')
+                }
+                _path = path.slice(0, -1);//删除最后的/
+                tab.reload({
+                    where: {
+                        Path: _path
+                    },
+                    path: _path
+                })
+            } else if (obj.event === 'refresh') {
+                tab.reload({
+                    where: {
+                        Path: _path
+                    },
+                    path: _path
+                })
+            }
+        });
+        layui.table.on('tool(tool)', function (obj) {
+            var data = obj.data;
+            if (obj.event === "openFolder") { //点击文件夹
+                _path = data.path.replace(/\s/g, "");
+                tab.reload({
+                    where: {
+                        Path: _path,
+                    },
+                    path: _path
+                })
+            } else console.log(obj);
+            if (obj.event === "edit") {
+                // top.layui.admin.popupRight({
+                //     id: 'EditProject'
+                //     , title: ' @T("编辑项目")'
+                //     , closeBtn: 1
+                //     , area: ['600px']
+                //     , success: function () {
+                //         $('#' + this.id, window.parent.document).html('<iframe src="@Url.Action("Edit")?id=' + data.Id + '" frameborder="0" class="layadmin-iframe"></iframe>');
+                //     }
+                // });
+                layui.layer.msg('@T("功能暂未开启")')
+            } else if (obj.event === "del") {
+                // layer.confirm('@T("确认删除吗")?', function (index) {
+                //     $.post('@Url.Action("Delete")', { Id: data.Id }, function (data) {
+                //         if (data.success) {
+                //             os.success('@T("删除成功")');
+                //             active.reload();
+                //         } else {
+                //             //alert(data.msg);
+                //             //os.success(data.msg);
+                //             os.warning(data.msg);
+                //         }
+                //     });
+                //     layer.close(index);
+                // });
+                layui.layer.msg('@T("功能暂未开启")')
+            } else if (obj.event === "lookThing") {
+                newTab('@(Url.Action("Index", "Things")?.ToLower())?PId=' + data.Id + "&jump=1", '@T("查看设备列表")');
+            }
+        });
+    })
+</script>

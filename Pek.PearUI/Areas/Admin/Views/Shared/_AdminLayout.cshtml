@@ -1,0 +1,50 @@
+﻿@inject IWorkContext workContext
+@{
+    var language = workContext.WorkingLanguage;
+
+    var addDefaultTitle = false;
+
+    if (ViewBag.AddDefaultTitle != null)
+    {
+        addDefaultTitle = ViewBag.AddDefaultTitle;
+    }
+}
+<!DOCTYPE html>
+<html lang="@language.LanguageCulture" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.DGPageCssClasses()>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>@Html.DGTitle(addDefaultTitle)</title>
+    @Html.DGHeadCustom()
+    <!-- 依 赖 样 式 -->
+    <link rel="stylesheet" href="~/libs/pear/css/pear.css" asp-append-version="true" />
+    @Html.DGCssFiles(ResourceLocation.Head)
+    <script>
+        var logoutUrl = '@Url.Action("Index", "Logout", new { ReturnState = 1 })';
+        var refreshTokenUrl = '@Url.Action("RefreshToken", "Site", new { Area = "" })';
+        var loginUrl = '@Url.Action("Index", "Login")';
+        var memberGetAccessToken = '@Url.Action("GetMemberAccessToken", "Site", new { Area = "" })';
+    </script>
+    @Html.DGScripts(ResourceLocation.Head)
+    @Html.DGCanonicalUrls()
+    @Html.DGInlineCss(ResourceLocation.Head)
+    @Html.DGInlineScripts(ResourceLocation.Head)
+    <!--Powered by DengHao - https://www.deng-hao.com-->
+</head>
+<body class="layui-layout-body pear-admin">
+    @RenderBody()
+
+    <!-- 依 赖 脚 本 -->
+    <script src="~/libs/layui/layui.js" asp-append-version="true"></script>
+    <script src="~/libs/pear/pear.js" asp-append-version="true"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
+    <script src="~/lib/msgpack5/dist/msgpack5.js" asp-append-version="true"></script>
+    <script src="~/lib/microsoft/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.js" asp-append-version="true"></script>
+
+    @Html.DGCssFiles(ResourceLocation.Footer)
+    @Html.DGScripts(ResourceLocation.Footer)
+    @Html.DGInlineScripts(ResourceLocation.Footer)
+</body>
+</html>

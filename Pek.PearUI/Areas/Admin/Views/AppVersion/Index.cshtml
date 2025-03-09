@@ -1,0 +1,380 @@
+﻿@model DH.Entity.RoleEx
+@{
+    Html.AppendTitleParts(T("App版本").Text);
+
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/dtree.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/font/dtreefont.css");
+    var list = ViewBag.Role as IList<Role>;
+    var dgPage = (Pek.Webs.HttpContext.Current.Request.RouteValues["controller"] + "_" + Pek.Webs.HttpContext.Current.Request.RouteValues["action"]).ToLower();
+}
+<style asp-location="true">
+    .totalcolor {
+        font-size: 18px;
+        color: #2db7f5;
+    }
+
+    .onlinecolor {
+        font-size: 18px;
+        color: #19be6b;
+    }
+
+    .noactivecolor {
+        font-size: 18px;
+        color: #f90;
+    }
+
+    .layui-card-header {
+        height: auto;
+    }
+
+    .layui-table td, .layui-table th {
+        border-right: none;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+<form class="layui-form dg-form">
+    <div class="layui-form-item" id="search" style="margin-bottom: 3px;">
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: auto">@T("关键词")：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="FileName" id="FileName" placeholder="@T("请输入名称、版本、内容等")" autocomplete="off" class="layui-input" lay-filter="name">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: auto"> @T("系统类型")：</label>
+            <div class="layui-input-inline">
+                <select name="AType" id="AType" lay-filter="upgradeChange" style="color:gray;">
+                    <option value="0">@T("全部")</option>
+                    <option value="1">@T("Android")</option>
+                    <option value="2">@T("iOS")</option>
+                </select>
+            </div>
+        </div>
+
+        @if (Model?.Role.IsSystem == true && Model.IsAdmin)
+        {
+            <div class="layui-inline">
+                <label class="layui-form-label"> @T("角色")：</label>
+                <div class="layui-input-inline seller-inline-3">
+                    <select name="role" id="role" lay-filter="role">
+                        <option value="0">@T("全部")</option>
+                        @foreach (var item in list!)
+                        {
+                            <option value="@item.ID">@T(item.Name)</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        }
+
+        <div class="layui-inline" style="float:right;">
+
+            <button type="button" class="pear-btn pear-btn-primary pear-btn-md" id="add">
+                <i class="layui-icon layui-icon-add-1"></i>
+                @T("新增")
+            </button>
+
+
+            <!-- <button type="button" class="layui-btn layui-btn-sm AddAgent" lay-submit>@T("添加代理商")</button> -->
+            @*  @if (this.Has((PermissionFlags)16))
+            {
+            <button type="button" class="layui-btn layui-btn-sm AddAcction" lay-submit>@T("创建用户")</button>
+            }*@
+
+            <!-- <button type="button" class="layui-btn layui-btn-sm" data-type="Import" id="Import">@T("导入厂商") </button> -->
+
+        </div>
+
+    </div>
+</form>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table class="layui-hide" id="tablist" lay-filter="tool"></table>
+    </div>
+</div>
+<script type="text/html" id="tool">
+    @if (this.Has((PermissionFlags)4))
+    {
+        <a class="pear-btn pear-btn-primary pear-btn-xs" lay-event="edit"> @T("编辑")</a>
+    }
+
+    @if (this.Has((PermissionFlags)8))
+    {
+        <a class="pear-btn pear-btn-danger pear-btn-xs" lay-event="del"> @T("删除")</a>
+    }
+
+    @if (this.Has((PermissionFlags)16))
+    {
+        <a class="pear-btn pear-btn-warming pear-btn-xs" lay-event="look"> @T("日志")</a>
+    }
+    <!-- <a class="layui-btn layui-btn-xs" lay-event="lookThing"> @T("查看设备")</a> -->
+</script>
+<script type="text/html" id="switchTpl">
+
+    <!-- {{d.IsQiangZhi}} -->
+        <!-- <input type="checkbox" name="status" data-id="{{d.IsQiangZhi}}" lay-skin="switch" lay-text="@T("是")|@T("否")" lay-filter="statusedit" {{ d.IsQiangZhi=="true"?'checked':''}}> -->
+</script>
+<script src="~/js/initSignalr.js" asp-append-version="true"></script>
+<script src="~/js/Storage.js" asp-append-version="true"></script>
+
+<script asp-location="Footer">
+    const storage = new Storage();  // new Storage(3)
+
+    var currentDomain = window.location.protocol + "//" + window.location.hostname;
+
+    if (window.location.port !== "") {
+        currentDomain = currentDomain + ":" + window.location.port;
+    }
+    var notifyUrl = currentDomain;
+
+    var token = storage.get("AccessToken");
+    var dgpage = '@dgPage';
+
+    var active, layuiIndex;
+    layui.use(['table', 'jquery', 'form', 'dgcommon', 'dg'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            os = layui.dgcommon,
+            table = layui.table,
+            dg = layui.dg;
+
+
+        form.on("select(upgradeChange)", function () {
+            active.reload();
+        });
+
+        table.render({
+            elem: '#tablist'
+            , url: '@Url.Action("GetList")'
+            , page: true //开启分页
+            , cellMinWidth: 120
+            , cols: [[
+                // { field: 'Id', title: '@T("ID编号")' }
+                { field: 'Version', title: '@T("版本号")', width: 200 }
+                , { field: 'Content', title: '@T("升级内容")', minWidth: 200 }
+                , {
+                    field: 'AType', title: '@T("APP类型")', templet: (d) => {
+                        if (d.AType === 1) {
+                            return `<div>Android</div>`
+                        }
+                        if (d.AType === 2) {
+                            return `<div>iOS</div>`
+                        }
+                        return `<div></div>`
+                    }, width: 100
+                }
+                , { field: 'FileName', title: '@T("文件名称")', minWidth: 200 }
+                , {
+                    field: 'IsQiangZhi', title: '@T("是否强制升级")', templet: (d) => {
+                        if (d.IsQiangZhi) {
+                            return `<div>${@T("'是'")}</div>`
+                        }
+                        return `<div>${@T("'否'")}</div>`
+                    }, width: 120
+                }//, templet: '#switchTpl'
+                , { field: 'Size', title: '@T("文件大小")', width: 100 }
+                , {
+                    field: 'FilePath', title: '@T("下载地址")', minWidth: 300, templet: (d) => {
+                        if (d.FileName) {
+                            return d.FilePath;
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+                , {
+                    field: 'CstFilepath', title: '@T("国内第三方平台下载地址")', templet: function (d) {
+                        if (d.CstFilepath) {
+                            return d.CstFilepath;
+                        } else {
+                            return '';
+                        }
+                    }, minWidth: 280
+                }
+                , {
+                    field: 'ForeignCstFilepath', title: '@T("国外第三方平台下载地址")', templet: function (d) {
+                        if (d.ForeignCstFilepath) {
+                            return d.ForeignCstFilepath;
+                        } else {
+                            return '';
+                        }
+                    }, minWidth: 280
+                }
+                // , { field: 'Id', title: '@T("编号")', minWidth: 200 }
+                // , { field: 'AId', title: '@T("APP版本Id")', minWidth: 130 }
+                // , { field: 'LIdu', title: '@T("关联所属语言Id")', minWidth: 160 }
+                // , { field: 'Content', title: '@T("升级内容")', minWidth: 160 }
+                // , { field: 'CreateUser', title: '@T("创建者")', minWidth: 120 }
+                // , { field: 'CreateTime', title: '@T("创建时间")', minWidth: 120 }
+                // , { field: 'UpdateUser', title: '@T("更新者")', minWidth: 90 }
+                // , { field: 'UpdateTime"', title: '@T("更新时间")', minWidth: 120 }
+                , { fixed: 'right', title: ' @T("操作")', toolbar: '#tool', width: 200, align: "center" }
+            ]]
+            , limit: 16
+            , limits: [10, 16, 20, 30, 50, 100]
+            , height: 'full-106'
+            , id: 'tables'
+        });
+
+        window.active = {
+            reload: function () {
+                table.reload('tables',
+                    {
+                        page: {
+                            curr: 1
+                        },
+                        where: {
+                            FileName: $("#FileName").val(),
+                            AType: $("#AType").val(),
+                        }
+                    });
+            },
+            success: function (data) {
+                os.success(data);
+            }
+
+        }
+        //监听开关事件
+        // form.on('switch(statusedit)', function (data) {
+        //     //开关是否开启，true或者false
+        //     var checked = data.elem.checked;
+        //     //获取所属属性值
+        //     var id = data.elem.attributes['data-id'].nodeValue;
+        //     $.post('@Url.Action("modifystate")', { id: id, status: checked }, function (res) {
+        //         if (res.success) {
+        //             os.success('@T("状态调整成功!")');
+        //         }
+        //         else {
+        //             os.error(res.msg);
+        //         }
+        //     });
+        // });
+
+
+        table.on('tool(tool)', function (obj) {
+            var data = obj.data;
+            if (obj.event === "edit") {
+                top.layui.dg.popupRight({
+                    id: 'Edit'
+                    , title: ' @T("编辑")'
+                    , closeBtn: 1
+                    , area: ['680px']
+                    , success: function () {
+                        $('#' + this.id, window.parent.document).html('<iframe src="@Url.Action("Edit")?id=' + data.Id + '" frameborder="0" class="layadmin-iframe"></iframe>');
+                    }
+                });
+            } else if (obj.event === "del") {
+                layer.confirm('@T("确认删除吗")?', function (index) {
+                    $.post('@Url.Action("Delete")', { Id: data.Id }, function (data) {
+                        if (data.success) {
+                            os.success('@T("删除成功")');
+                            active.reload();
+                        } else {
+                            os.warning(data.msg);
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if (obj.event === 'look') {
+                top.layui.dg.popupRight({
+                    id: 'Look'
+                    , title: ' @T("日志")'
+                    , closeBtn: 1
+                    , area: ['750px']
+                    , success: function () {
+                        $('#' + this.id, window.parent.document).html('<iframe src="@Url.Action("ManageAppVersionLogs")?id=' + data.Id + '" frameborder="0" class="layadmin-iframe"></iframe>');
+                    }
+                });
+            }
+        });
+
+        $("#FileName").on("input", function (e) {
+            active.reload();
+        });
+
+        //监听开关事件
+        form.on('switch(statusedit)', function (data) {
+            //开关是否开启，true或者false
+            var checked = data.elem.checked;
+            //获取所属属性值
+            var id = data.elem.attributes['data-id'].nodeValue;
+            $.post('@Url.Action("modifystate")', { id: id, status: checked }, function (res) {
+                if (res.success) {
+                    os.success('@T("状态调整成功!")');
+                }
+                else {
+                    os.error(res.msg);
+                }
+            });
+        });
+
+        $("#add").click(() => {
+            top.layui.dg.popupRight({
+                id: 'add'
+                , title: ' @T("新增")'
+                , closeBtn: 1
+                , area: ['680px']
+                , success: function () {
+                    $('#' + this.id, window.parent.document).html('<iframe src="@Url.Action("UpgradeDetail")" frameborder="0" class="layadmin-iframe"></iframe>');
+                }
+            });
+        });
+
+
+        function success() {
+            active.reload();
+        }
+
+
+        //在新标签页中 打开页面
+        function newTab(url, title) {
+            if (top.layui.index) {
+                top.layui.index.openTabsPage(url, title)
+            } else {
+                window.open(url)
+            }
+        }
+
+
+    });
+</script>

@@ -1,0 +1,224 @@
+﻿@{
+    Html.AppendTitleParts(T("在线用户").Text);
+}
+<style asp-location="true">
+    .layui-table td, .layui-table th {
+        border-right: none;
+    }
+
+    .layui-card-body {
+        padding-bottom: 1px;
+    }
+
+    .layui-layer-title {
+        background-color: #fff;
+    }
+
+    .dtree-nav-item {
+        padding-left: 0;
+    }
+
+    .layui-table-tool {
+        z-index: 1;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table class="layui-hide" id="tablist" lay-filter="tool"></table>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $("body").on("click", function (event) {
+        $("div[dtree-id][dtree-select]").removeClass("layui-form-selected");
+        $("div[dtree-id][dtree-card]").removeClass("dtree-select-show layui-anim layui-anim-upbit");
+    });
+
+    layui.use(['table', 'abp', 'dg', 'form', 'dgcommon'], function () {
+        var $ = layui.jquery;
+        var abp = layui.abp;
+        var form = layui.form;
+        var table = layui.table;
+        var dg = layui.dg;
+        var os = layui.dgcommon;
+
+        table.render({
+            elem: '#tablist'
+            , url: '@Url.Action("GetPageList")'
+            , page: true //开启分页
+            , toolbar: '#user-toolbar'
+            , defaultToolbar: [{
+                title: '@T("刷新")',
+                layEvent: 'refresh',
+                icon: 'layui-icon-refresh',
+            }, 'filter', 'print']
+            , cellMinWidth: 80
+            , cols: [[
+                { field: 'Uid', title: '@T("UID")',width:80  }
+                , { field: 'Sid', title: '@T("Sessionid")',width:180  }
+                , { field: 'NickName', title: '@T("昵称")',width:180  }
+                , { field: 'Ip', title: '@T("用户IP")',width:140  }
+                , { field: 'Region', title: '@T("网络环境")',width:120  }
+                , { field: 'Clicks', title: '@T("请求次数")',width:100 }
+                , { field: 'UserAgent', title: '@T("设备信息")',minWidth:480 }
+                // , { fixed: 'right', title: ' @T("操作")', toolbar: '#tool', width: 130 }
+            ]]
+            , limit: 13
+            , limits: [10, 13, 20, 30, 50, 100]
+            , height: 'full-100'
+            , id: 'tables'
+        });
+
+        window.active = {
+            reload: function () {
+                table.reload('tables',
+                    {
+                        where: {
+                            name: $("#name").val(),
+                        },
+                        page: {
+                            curr: 1
+                        }
+                    });
+            }
+        }
+
+        $("#name").on("input", function (e) {
+            active.reload();
+        });
+
+        table.on('toolbar(tool)', function (obj) {
+            if (obj.event === 'add') {
+                window.add();
+            } else if (obj.event === 'refresh') {
+                active.reload();
+            }
+        });
+
+        table.on('tool(tool)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                parent.layer.confirm('@T("确认删除吗")?', { btn: ["@T("确认")", "@T("取消")"], title: "@T("提示")" }, function (index) {
+                    $.post('@Url.Action("MemberDelete")', { Id: data.ID }, function (data) {
+                        if (data.success) {
+                            abp.notify.success('@T("删除成功")');
+                            active.reload();
+                        } else {
+                            abp.notify.warn(data.msg);
+                        }
+                    });
+                    parent.layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                window.edit(data);
+            }
+
+        });
+
+        window.saveCallback = function (data) {
+            layer.close(data.index);
+            abp.notify.success(data.msg);
+            table.reload("tables");
+        }
+
+        window.add = function () {
+            layer.open({
+                type: 2,
+                title: "@T("添加用户")",
+                content: "@Url.Action("Add")",
+                area: ["710px", "436px"],
+                shade: 0.1,
+                btn: ['@T("确定")', '@T("取消")'],
+                yes: function (index, layero) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+        window.edit = function (data) {
+            layer.open({
+                type: 2,
+                title: "@T("编辑用户")",
+                content: "@Url.Action("Edit")" + abp.utils.formatString("?id={0}", data.ID),
+                area: ["710px", "436px"],
+                shade: 0.1,
+                btn: ['@T("确定")', '@T("取消")'],
+                yes: function (index, layero) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+        //监听开关事件
+        form.on('switch(statusedit)', function (data) {
+            //开关是否开启，true或者false
+            var checked = data.elem.checked;
+            //获取所属属性值
+            var id = data.elem.attributes['data-id'].nodeValue;
+            $.post('@Url.Action("ModifyState")', { id: id, status: checked }, function (res) {
+                if (res.success) {
+                    abp.notify.success(res.msg);
+                }
+                else {
+                    abp.notify.error(res.msg);
+                }
+            });
+        });
+
+    });
+</script>
+
+<script type="text/html" id="tool">
+ @if (this.Has((PermissionFlags)4)){
+    <a class="pear-btn pear-btn-primary pear-btn-xs" lay-event="edit"> @T("编辑")</a>
+ }
+      @if (this.Has((PermissionFlags)8)){
+    <a class="pear-btn pear-btn-danger pear-btn-xs" lay-event="del"> @T("删除")</a>
+      }
+</script>
+
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="status" data-id="{{d.ID}}" lay-skin="switch" lay-text="ON|OFF" lay-filter="statusedit" {{ d.Enable == "1"?'checked':''}}>
+</script>

@@ -1,0 +1,28 @@
+﻿@using System.Text
+@using System.Security.Cryptography
+@model DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarUserArea.RightNavbarUserAreaViewModel
+@{
+    var adminarea = YRY.Web.Controllers.Areas.Admin.AdminArea.AreaName;
+
+    var calculateNavId = new Func<string, string>((hashTarget) =>
+    {
+        using (var md5 = MD5.Create())
+        {
+            var md5ComputeHash = md5.ComputeHash(Encoding.UTF8.GetBytes(hashTarget.ToUpper()));
+            var bitConverterResult = BitConverter.ToString(md5ComputeHash);
+            var replaceResult = bitConverterResult.Replace("-", "");
+            return replaceResult;
+        }
+    });
+}
+
+<li class="layui-nav-item">
+    <!-- 头 像 -->
+    <a href="javascript:;"><img src="@Url.Action("GetProfilePicture", "Common", new { area = "" })" class="layui-nav-img">@Html.Raw(Model!.GetShownLoginName())</a>
+    <!-- 功 能 菜 单 -->
+    <dl class="layui-nav-child">
+        <dd><a user-menu-url="@Url.Action("Index","UserInfo")" user-menu-id="@calculateNavId(Url.Action("Index","UserInfo")!)" user-menu-title="@T("基本资料")">@T("基本资料")</a></dd>
+        <dd><a user-menu-url="@Url.Action("Index","PassWord")" user-menu-id="@calculateNavId(Url.Action("Index","PassWord")!)" user-menu-title="@T("修改密码")">@T("修改密码")</a></dd>
+        <dd><a href="@Url.Action("Index", "Logout", new { area = adminarea } )">@T("注销登录")</a></dd>
+    </dl>
+</li>

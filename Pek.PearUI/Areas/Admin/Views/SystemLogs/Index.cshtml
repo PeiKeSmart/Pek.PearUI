@@ -1,0 +1,243 @@
+﻿@{
+    Html.AppendTitleParts(T("系统日志").Text);
+
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/dtree.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/font/dtreefont.css");
+}
+
+<style asp-location="true">
+    .layui-card-header {
+        height: 62px;
+    }
+
+    .dg-form {
+        margin: 0px;
+        padding: 10px 0px 2px 0px;
+    }
+
+    .folder {
+        width: 45px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .btn_box {
+        /* border:2px solid ; */
+        display: flex;
+    }
+
+    .button {
+        padding: 1px 15px;
+    }
+
+    .btn {
+        margin-left: 20px;
+    }
+
+    .root {
+        cursor: pointer;
+        transition: all .5s;
+    }
+    
+    .root:hover {
+        color: red;
+    }
+
+    .inputBox {
+        padding: 15px 0px 15px 10px;
+        margin: 8px;
+        width: 90%;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+<!-- <div class="layui-fluid">
+    <form class="layui-form dg-form">
+        <div class="layui-form-item" id="search" style="margin-bottom: 10px;">
+            <div class="btn_box">
+                <div class="btn">
+                   <button type="button" class="layui-btn layui-btn-sm" id="Create">@T("新建文件夹")</button>
+                </div>
+                 <div class="btn">
+                   <button type="button" class="layui-btn layui-btn-sm" id="Upload">@T("上传文件")</button>
+                </div>
+                <div class="root" style="margin-top:0px">
+                    <button type="button" class="layui-btn layui-btn-sm" id="Root">
+                     <i class="layui-icon layui-icon-left"></i>
+@T(":根目录")</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div> -->
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table class="layui-hide" id="tablist" lay-filter="tool"></table>
+    </div>
+</div>
+
+<script type="text/html" id="tool">
+    <a class="layui-btn layui-btn-xs button" lay-event="read">@T("查看")</a>
+    <!-- <a class="layui-btn layui-btn-xs" lay-event="del"> @T("删除")</a> -->
+</script>
+
+<script src="~/js/Storage.js" asp-append-version="true"></script>
+
+<script asp-location="Footer">
+    layui.use(['table', 'jquery', 'common', 'upload'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            os = layui.common,
+            table = layui.tab;
+        upload = layui.upload
+
+        layui.table.render({
+            elem: '#tablist',
+            url: '@Url.Action("GetList")',
+            // page: false,
+            height: 'full-40',
+            cellMinWidth: 50,
+            cols: [[
+                { type: 'checkbox' },
+                {
+                    align: 'left', width: 50, templet: (d) => {
+                        return `<img src="${d.iconurl}" class="folder"/>`
+                    }
+                },
+                { field: 'name', align: 'center', title: '@T("文件名称")', width: 225, align: 'left' },
+                { field: 'path', align: 'center', title: '@T("路径")', minWidth: 160, align: 'left' },
+                // { field: 'Id', align: 'center', title: 'ID' },
+                { fixed: 'right', align: 'center', toolbar: '#tool', title: '@T("操作")', width: 120 }
+            ]],
+            cellExpandedMode: 'tips ',
+            skin: 'line',
+            where: { Path: '' }
+            , parseData: (res) => {
+                // console.log(res);
+                return {
+                    "code": res.code, // 解析接口状态
+                    "msg": res.msg, // 解析提示文本
+                    "count": res.count, // 解析数据长度
+                    "data": res.images // 解析数据列表
+                };
+            }
+        });
+
+        window.active = {
+            reload: function () {
+                table.reload('tablist',
+                    {
+                        where: {
+                            Path: '',
+                        }
+                    });
+            },
+        }
+
+        layui.table.on('tool(tool)', function (obj) {
+            var data = obj.data;
+            if (obj.event === "read") {
+                var index = parent.layer.open({
+                    type: 2,
+                    title: '@T("查看日志内容")',
+                    shadeClose: true,
+                    shade: false,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['893px', '100%'],
+                    content: '@Url.Action("GetInfo")?Path=' + data.path
+                });
+                parent.layer.full(index);  // 最大化
+            }
+        });
+        
+        // 新建文件夹 1
+        $("#Create").click(() => {
+            var layer = layui.layer
+            var $ = layui.jquery
+            var index = layer.open({
+                title: '@T("请输入新文件夹名字")',
+                type: 1,
+                content: '<div class="inputBox"><input class="layui-input" id="folderNameValue" type="text"/></div>',
+                btn: ['@T("确定")', '@T("关闭")'],
+                btn1: (index, layero, that) => {
+                    console.log('点击了', index, layero, $("#folderNameValue").val());
+                    layer.close(index)
+                    if ($("#folderNameValue").val().length === 0) {
+                        layer.msg('@T("请先输入新文件夹名字")')
+                    } else {
+                        new_dir_API()
+                    }
+                }
+            });
+
+            layer.style(index, { // 重新给width
+                width: '300px',
+            });
+        })
+        // 新建文件夹 2
+        const new_dir_API = () => {
+            var layer = layui.layer
+            var $ = layui.jquery
+            $.post('data.php?action=folder', { 'folder': $("#folderNameValue").val(), 'path': '' }, function (e) {
+                layer.msg(e.msg);
+                if (e.code == 1) {
+                    layui.table.reload('tablist');
+                }
+            })
+        }
+        // 上传文件 1
+        $("#Upload").click(() => {
+            console.log('点击了');
+        })
+        // 上传文件 2
+        var upIns = layui.upload.render({
+            elem: '#Upload' //绑定元素
+            , url: 'data.php?action=upload' //上传接口
+            , field: 'file[]'
+        })
+        // 点击回到根路径
+        $("#Root").click(() => {
+            console.log('点击了');
+        })
+    })
+</script>

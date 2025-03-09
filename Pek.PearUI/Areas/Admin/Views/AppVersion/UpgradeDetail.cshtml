@@ -1,0 +1,328 @@
+﻿@{
+    var localizationSettings = LocalizationSettings.Current;
+}
+<style asp-location="true">
+    .containers {
+        padding-top: 0px;
+        padding-left: 40px;
+    }
+
+    .layui-form-item.btn {
+        padding-top: 10px;
+        padding-left: 115px;
+    }
+
+    .label-width {
+        min-width: 100px;
+    }
+
+    .label-width span {
+        color: #f00;
+    }
+
+    .layui-form-item {
+        margin: 13px 10px;
+    }
+
+    .layui-form-label {
+        padding: 0px;
+        margin: 10px 10px 0px 0px;
+        color: rgb(70, 70, 70);
+        letter-spacing: 1px;
+
+    }
+
+    .text-width2 {
+        width: 420px;
+    }
+
+    .layui-input-inline {
+        margin-left: 10px;
+    }
+
+    .bala {
+        /* float: right; */
+        /* padding-right: 66px; */
+        padding-bottom: 20px;
+        padding-top: 10px;
+        text-align: center;
+    }
+
+    .layui-form-switch {
+        width: 58px;
+        height: 26px;
+    }
+
+    .layui-form-switch>div {
+        font-size: 14px;
+    }
+
+    .layui-form-switch>i {
+        width: 18px;
+        height: 18px;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+<div class="containers">
+    <form class="layui-form">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin: 0px;">
+            @if (localizationSettings.IsEnable)
+            {
+                <ul class="layui-tab-title">
+                    <li class="layui-this">@T("标准")</li>
+
+                    @foreach (var item in (IEnumerable<DH.Entity.Language>)ViewBag.LanguageList)
+                    {
+                        <li>@item.DisplayName</li>
+                    }
+                </ul>
+            }
+            <div class="layui-tab-content" style="padding:10px 0px;">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form-item" style="margin-bottom:0px">
+                        <label class="layui-form-label label-width">
+                            <span>*</span>@T("升级内容")
+                        </label>
+                        <div class="layui-input-inline">
+                            <textarea name="Content" autocomplete="off" placeholder="@T("请输入升级内容")"
+                                class="layui-textarea text-width2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                @if (localizationSettings.IsEnable)
+                {
+                    @foreach (var item in (IEnumerable<DH.Entity.Language>)ViewBag.LanguageList)
+                    {
+                        <div class="layui-tab-item" style="padding:0px 0px;">
+                            <div class="layui-form-item" style="margin-bottom:0px">
+                                <label class="layui-form-label label-width">
+                                    <span>*</span>@T("升级内容")
+                                </label>
+                                <div class="layui-input-inline">
+                                    <textarea name="[@item.Id].Content" autocomplete="off" placeholder="@T("请输入升级内容")"
+                                        class="layui-textarea text-width2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label label-width">
+                <span>*</span>@T("APP类型")
+            </label>
+            <div class="layui-input-inline label-width" style="color:gray;width:200px;">
+                <select name="AType" id="AType" lay-filter="upgradeChange" style="color:gray;">
+                    <option value="-1">@T("请选择")</option>
+                    <option value="1">@T("Android")</option>
+                    <option value="2">@T("iOS")</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label label-width">
+                <span>*</span>@T("版本号")
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="Version" id="Version" autocomplete="off" placeholder="@T("请输入版本号")"
+                    class="layui-input" style="width: 200px;">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="padding: 0px 0px;">
+            <label class="layui-form-label label-width">
+                @T("上传文件")
+            </label>
+            <div class="layui-input-inline" style="width:260px;">
+                <div class="layui-upload-drag" id="upload">
+                    <i class="layui-icon"></i>
+                    <p>@T("点击上传，或将文件拖拽到此处")</p>
+                    <div class="layui-hide" id="uploadDemoView">
+                        <hr>
+                        <label id="excel" class="layui-form-label-left"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label label-width" style="white-space:nowrap;">
+                @T("是否强制升级")
+            </label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="IsQiangZhi" id="IsQiangZhi" lay-skin="switch" lay-text="@T("是")|@T("否")"
+                    lay-filter="switchTest">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label label-width">
+                <span>*</span>@T("文件大小")
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="Size" id="Size" autocomplete="off" class="layui-input text-width2" value=""
+                    lay-verify="myemail" lay-verType="tips">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label label-width">
+                <span>*</span>@T("下载地址")
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="FilePath" id="FilePath" autocomplete="off" class="layui-input text-width2"
+                    value="" lay-verify="myemail" lay-verType="tips">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label label-width">
+                @T("国内平台地址")
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="CstFilepath" id="CstFilepath" placeholder="@T("请输入..")" autocomplete="off"
+                    class="layui-input text-width2" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label label-width">
+                @T("国外平台地址")
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="ForeignCstFilepath" id="ForeignCstFilepath" placeholder="@T("请输入..")"
+                    autocomplete="off" class="layui-input text-width2" value="">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label label-width">
+                <span>*</span>@T("文件名称")
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="FileName" id="FileName" autocomplete="off" class="layui-input text-width2">
+            </div>
+            <div class="layui-form-mid layui-word-aux"></div>
+        </div>
+
+
+        <div class="layui-form-item btn" style="padding-left: 260px;margin-top:50px;">
+            <input type="hidden" value="" name="UpdateId" id="upid" />
+            <button type="button" class="pear-btn pear-btn-primary pear-btn-normal" lay-submit=""
+                lay-filter="submit">@T("保存")</button>
+        </div>
+    </form>
+</div>
+<script asp-location="Footer">
+
+    function reload() {
+        var n = parent === self ? layui : top.layui, i = n.admin.tabsBody(n.admin.tabsPage.index).find(".layadmin-iframe"), t = i[0].contentWindow; t.active.success('@T("操作成功")'); t.active.reload()
+    }
+
+    layui.use('element', function () {
+        var $ = layui.jquery
+            , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+    });
+
+    var active, layuiIndex;
+    layui.use(["form", "table", "jquery", "dgcommon", "dg", 'upload'], function () {
+        var r = layui.jquery,
+            t = layui.form,
+            upload = layui.upload,
+            n = layui.dgcommon,
+            dg = layui.dg,
+            u = layui.table, i;
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.iframeAuto(index);
+        t.render();
+
+        t.on("select(upgradeChange)", function (e) {
+            console.log(e.value);
+            $("#AType").val(e.value)
+        });
+
+        t.on("submit(submit)", function (t) {
+            if (!t.field.Version) {
+                n.warning('@T("版本号不能为空")'); return
+            }
+            if (!t.field.Content) {
+                n.warning('@T("升级内容不能为空")'); return
+            }
+            if (t.field.AType == '' || t.field.AType == -1) {
+                n.warning('@T("系统类型未选择！")'); return
+            }
+            $.post("@Url.Action("UpgradeDetails")", $('form').serialize(), function (result) {
+                if (result.success) {
+                    parent.layer.closeAll();
+                    dg.reload('tables');
+                }
+                else
+                    layui.dgcommon.warning(result.msg);
+            });
+        });
+        //监听开关事件
+        t.on('switch', (data) => {
+            console.log(data.elem.checked);
+            $("#IsQiangZhi").val(data.elem.checked)
+            console.log($("#IsQiangZhi").val());
+        });
+        //拖拽阈值表上传
+        upload.render({
+            elem: '#upload'
+            , url: '@Url.Action("UploadFiles")' //改成您自己的上传接口
+            , done: function (res) {
+                if (!res.success) { //失败打印
+                    n.warning(res.msg);
+                    return;
+                }
+                n.success('@T("上传成功")');
+                console.log('上传成功', res.data);
+                $("#upid").val(res.data.Id);
+                $("#Size").val(res.data.FileSize);
+                $("#FileName").val(res.data.OriginFileName);
+                $("#FilePath").val(res.data.FileUrl);
+            },
+            auto: true  // 是否选完文件后自动上传，true为是
+            , accept: 'apk|aab|ipa' //允许上传的文件类型
+            , exts: 'apk|aab|ipa' //只允许文件
+            , bindAction: '#save'  // 指向一个按钮触发上传,需要搭配auto: false
+        });
+    });
+</script>

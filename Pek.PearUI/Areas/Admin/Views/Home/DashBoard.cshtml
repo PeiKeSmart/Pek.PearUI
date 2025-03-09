@@ -1,0 +1,392 @@
+﻿@using DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarLanguageSwitch
+@using DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarUserArea
+@using DH.Cube.Areas.Admin.Views.Shared.Components.SideBarMenu
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    // Css
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/css/dg.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/css/admin.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/css/loader.css");
+
+    // Script
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/dg.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/Storage.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/initSignalr.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/jquery.min.js");
+
+    var site = SiteInfo.FindDefault();
+
+    Html.AppendTitleParts(T($"{site?.SiteName}").Text);
+
+    var dgPage = (Pek.Webs.HttpContext.Current.Request.RouteValues["controller"] + "_" + Pek.Webs.HttpContext.Current.Request.RouteValues["action"]).ToLower();
+}
+<style asp-location="true">
+    .layui-nav-child a {
+        cursor: pointer;
+    }
+    @if (language.UniqueSeoCode=="en")
+    {
+        <text>
+             .pear-tab-menu{
+                 width:120px !important;
+             }
+        </text>
+
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+
+    var logoutUrl = '@Url.Action("Index", "Logout", new { ReturnState = 1 })';
+    var refreshTokenUrl = '@Url.Action("RefreshToken", "Site", new { Area = "" })';
+    var loginUrl = '@Url.Action("Index", "Login")';
+    var memberGetAccessToken = '@Url.Action("GetMemberAccessToken", "Site", new { Area = "" })';
+
+    var sslEnabled = @DHSetting.Current.SslEnabled;
+    var currentURL = window.location.href;
+
+    if (!currentURL.includes("localhost")) {
+        if (sslEnabled == 1) {
+            if (currentURL.startsWith("http://")) {
+                var newURL = currentURL.replace(/http:\/\//, 'https://');
+                window.location.href = newURL;
+            }
+        }
+        else if (sslEnabled == 2) {
+            if (currentURL.startsWith("https://")) {
+                var newURL = currentURL.replace(/https:\/\//, 'http://');
+                window.location.href = newURL;
+            }
+        }
+    }
+</script>
+<!-- 布 局 框 架 -->
+<div class="layui-layout layui-layout-admin">
+    <!-- 顶 部 样 式 -->
+    <div class="layui-header">
+        <!-- 菜 单 顶 部 -->
+        <div class="layui-logo">
+            <!-- 图 标 -->
+            <img class="logo">
+            <!-- 标 题 -->
+            <span class="title"></span>
+        </div>
+        <!-- 顶 部 左 侧 功 能 -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="collapse layui-nav-item"><a href="#" class="layui-icon layui-icon-shrink-right"></a></li>
+            <li class="refresh layui-nav-item"><a href="#" class="layui-icon layui-icon-refresh-1" loading=600></a></li>
+        </ul>
+        <!-- 多 系 统 菜 单 -->
+        <div id="control" class="layui-layout-control"></div>
+        <!-- 顶 部 右 侧 菜 单 -->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide-xs"><a href="#" class="menuSearch layui-icon layui-icon-search"></a></li>
+            <li class="layui-nav-item layui-hide-xs"><a href="#" class="fullScreen layui-icon layui-icon-screen-full"></a></li>
+            <li class="layui-nav-item layui-hide-xs"><a href="https://www.hlktech.com" target="_blank" class="layui-icon layui-icon-website"></a></li>
+            <li class="layui-nav-item layui-hide-xs message"></li>
+            @await Component.InvokeAsync(typeof(RightNavbarLanguageSwitchViewComponent))
+            @await Component.InvokeAsync(typeof(RightNavbarUserAreaViewComponent))
+
+            <!-- 主 题 配 置 -->
+            <li class="layui-nav-item setting"><a href="#" class="layui-icon layui-icon-more-vertical"></a></li>
+        </ul>
+    </div>
+    <!-- 侧 边 区 域 -->
+    <div class="layui-side layui-bg-black">
+        <!-- 菜 单 顶 部 -->
+        <div class="layui-logo">
+            <!-- 图 标 -->
+            <img class="logo">
+            <!-- 标 题 -->
+            <span class="title"></span>
+        </div>
+        @await Component.InvokeAsync(typeof(SideBarMenuViewComponent))
+    </div>
+    <!-- 视 图 页 面 -->
+    <div class="layui-body">
+        <!-- 内 容 页 面 -->
+        <div id="content"></div>
+    </div>
+    <!-- 页脚 -->
+    <div class="layui-footer layui-text">
+        <span class="left">
+            /* Released under the MIT license. */
+        </span>
+        <span class="center"></span>
+        <span class="right">
+            Copyright © 2023-2023 deng-hao.com
+        </span>
+    </div>
+    <!-- 遮 盖 层 -->
+    <div class="pear-cover"></div>
+    <!-- 加 载 动 画 -->
+    <div class="loader-main">
+        <!-- 动 画 对 象 -->
+        <div class="loader"></div>
+    </div>
+</div>
+<!-- 移 动 端 便 捷 操 作 -->
+<div class="pear-collapsed-pe collapse">
+    <a href="#" class="layui-icon layui-icon-shrink-right"></a>
+</div>
+
+<!-- 框 架 初 始 化 -->
+<script asp-location="Footer">
+    const storage = new Storage();  // new Storage(3)
+
+    var notifyUrl = '@Pek.Helpers.DHWeb.GetSiteUrl()';
+    var token = storage.get("AccessToken");
+    var dgpage = '@dgPage';
+
+    layui.use(['admin', 'layer', 'dhhashs', 'abp', 'dg', 'dgcommon', 'jquery', 'popup', 'drawer'], function () {
+        var $ = layui.jquery;
+        var admin = layui.admin;
+        var popup = layui.popup;
+        var hash = layui.dhhashs;
+        var dg = layui.dg;
+        var abp = layui.abp;
+        var os = layui.dgcommon;
+
+        var config = {
+            "logo": {
+                "title": "@T($"{site?.SiteName}") V@(DHSetting.Current.CurrentVersion)",
+                "image": "/images/logo.png"
+            },
+            "menu": {
+                "accordion": true,
+                "collapse": false,
+                "control": false,
+                "controlWidth": 500,
+                select: hash.md5("@Url.Action("Index", "Main")!.ToUpper()").toUpperCase(),
+                "async": false
+            },
+            "tab": {
+                "enable": true,
+                "keepState": true,
+                "session": true,
+                "preload": false,
+                "max": "30",
+                "index": {
+                    "id": hash.md5("@Url.Action("Index", "Main")!.ToUpper()").toUpperCase(),
+                    "href": '@Url.Action("Index", "Main")',
+                    "title": "@Html.Raw(T("控制台"))"
+                }
+            },
+            "theme": {
+                "defaultColor": "2",
+                "defaultMenu": "dark-theme",
+                "defaultHeader": "light-theme",
+                "allowCustom": true,
+                "banner": false
+            },
+            "colors": [
+                {
+                    "id": "1",
+                    "color": "#2d8cf0",
+                    "second": "#ecf5ff"
+                },
+                {
+                    "id": "2",
+                    "color": "#36b368",
+                    "second": "#f0f9eb"
+                },
+                {
+                    "id": "3",
+                    "color": "#f6ad55",
+                    "second": "#fdf6ec"
+                },
+                {
+                    "id": "4",
+                    "color": "#f56c6c",
+                    "second": "#fef0f0"
+                },
+                {
+                    "id": "5",
+                    "color": "#3963bc",
+                    "second": "#ecf5ff"
+                },
+                {
+                    id: "6",
+                    color: "#f7cfea",
+                    second: "#ecf5ff"
+                }
+            ],
+            "other": {
+                "keepLoad": "1200",
+                "autoHead": false,
+                "footer": false
+            },
+            "header": {
+                "message": "@Url.Action("GetHeadMessage", "Common", new { area = "" })"
+            }
+        };
+        admin.render(config);
+
+        function printMessage() {
+            var AccessToken = storage.get("AccessToken");
+            var RefreshToken = storage.get("RefreshToken");
+            var AccessTokenUtcExpires = storage.get("AccessTokenUtcExpires");
+            var RefreshUtcExpires = storage.get("RefreshUtcExpires");
+            var Remember = storage.get("remember");
+
+            var now = new Date().getTime(); // 获取当前时间戳
+
+            var seconds = Math.floor((RefreshUtcExpires - now) / 1000); //  计算时间戳与当前时间之间的秒数
+            var seconds1 = Math.floor((AccessTokenUtcExpires - now) / 1000); //  计算时间戳与当前时间之间的秒数
+
+            if (AccessTokenUtcExpires === null || RefreshUtcExpires === null || seconds < 0) {
+                $.ajax
+                    ({
+                        url: '@Url.Action("Index", "Logout", new { ReturnState = 1 })',  // 退出登录
+                        dataType: 'json',
+                        method: 'POST',
+                        data:
+                        {
+
+                        },
+                        success: function (data) {
+                            if (data.code == 0) {
+                                storage.remove("AccessToken");
+                                storage.remove("RefreshToken");
+                                storage.remove("AccessTokenUtcExpires");
+                                storage.remove("RefreshUtcExpires");
+                                storage.remove("remember");
+
+                                window.location.href = "@Url.Action("Index", "Login")";
+                            }
+                        }
+                    })
+                return;
+            }
+
+            if (seconds1 < 300) {
+                $.ajax
+                    ({
+                        url: '@Url.Action("RefreshToken", "Site", new { Area = "" })',  // 刷新Token
+                        dataType: 'json',
+                        method: 'POST',
+                        data:
+                        {
+                            RefreshToken: RefreshToken,
+                            RefreshExpireMinutes: Remember
+                        },
+                        success: function (res) {
+                            //console.log(res);
+
+                            if (!res.success) {
+                                $.ajax
+                                    ({
+                                        url: '@Url.Action("Index", "Logout", new { ReturnState = 1 })',  // 退出登录
+                                        dataType: 'json',
+                                        method: 'POST',
+                                        data:
+                                        {
+
+                                        },
+                                        success: function (data) {
+                                            if (data.code == 0) {
+                                                storage.remove("AccessToken");
+                                                storage.remove("RefreshToken");
+                                                storage.remove("AccessTokenUtcExpires");
+                                                storage.remove("RefreshUtcExpires");
+                                                storage.remove("remember");
+
+                                                window.location.href = "@Url.Action("Index", "Login")";
+                                            }
+                                        }
+                                    })
+                                return;
+                            }
+
+                            var seconds2 = res.data.RefreshUtcExpires - now; // 计算时间戳与当前时间之间的秒数
+
+                            storage.set("AccessToken", res.data.AccessToken, seconds2);
+                            storage.set("RefreshToken", res.data.RefreshToken, seconds2);
+                            storage.set("AccessTokenUtcExpires", res.data.AccessTokenUtcExpires, seconds2);
+                            storage.set("RefreshUtcExpires", res.data.RefreshUtcExpires, seconds2);
+
+                            storage.set("remember", Remember, seconds2);
+                        }
+                    })
+            }
+        }
+
+        setInterval(printMessage, 60000); // 每隔1秒钟输出一次
+
+        window.selectedWindow = function () {
+            return $(".layui-body .layui-tab-content .layui-show")[0].children[0].contentWindow;
+        }
+        
+        window.warning = function (msg) {
+            os.warning(msg);
+        }
+
+        var connect;
+
+        initConnect();
+
+        function initConnect() {
+            console.log(`${notifyUrl}/notify-hub?dgpage=${dgpage}`)
+            connect = initSignalr({
+                delay: 0,
+                accessTokenFactory: token,
+                url: `${notifyUrl}/notify-hub?dgpage=${dgpage}`,
+                loggingLevel: signalR.LogLevel.Error,
+                onNotify: dealNotify,
+                onLine: function (data) {
+                    console.log(`${JSON.stringify(data)}`)
+                }
+            });
+        }
+
+        // 处理推送逻辑
+        function dealNotify(data) {
+            // console.log(`${JSON.stringify(data)}`);
+            switch (data.TenantType) {
+
+            }
+        }
+
+        // 消息点击回调
+        admin.message(function (id, title, context, form) { });
+    })
+</script>

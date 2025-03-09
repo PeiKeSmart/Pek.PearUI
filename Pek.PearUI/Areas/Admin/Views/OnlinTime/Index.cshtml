@@ -1,0 +1,318 @@
+﻿@{
+    Html.AppendTitleParts(T("在线时间").Text);
+
+    var Roles = Model.Roles as List<Role>;
+}
+<style asp-location="true">
+    .layui-table td, .layui-table th {
+        border-right: none;
+    }
+
+    .layui-card-body {
+        padding-bottom: 1px;
+    }
+
+    .layui-layer-title {
+        background-color: #fff;
+    }
+
+    .dtree-nav-item {
+        padding-left: 0;
+    }
+
+    .layui-table-tool {
+        margin-top:-10px;
+        z-index: 1;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+
+<form class="layui-form dg-form">
+    <div class="layui-form-item" id="search" style="margin-bottom: 3px;">
+            <div class="layui-inline" style="padding-top: 10px;">
+                <label class="layui-form-label" style="width: auto">@T("筛选时间")：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="startTime" id="startTime" readonly placeholder="@T("开始时间")" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="endTime" id="endTime" readonly placeholder="@T("结束时间")" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"> @T("角色")：</label>
+                <div class="layui-input-inline seller-inline-3">
+                    <select name="RoleId" id="RoleId" lay-filter="RoleId">
+                        <option value="0">@T("全部")</option>
+                        @foreach (var item in Roles!)
+                        {
+                            <!option value="@item.ID">@item.Name</!option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"> @T("用户名")：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="UName" id="UName" placeholder="@T("用户名")" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn layui-btn-sm" data-type="Search" id="Search">@T("搜索") </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table class="layui-hide" id="tablist" lay-filter="tool"></table>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    layui.use(['table', 'abp', 'dg', 'form', 'dgcommon'], function () {
+        var $ = layui.jquery;
+        var abp = layui.abp;
+        var form = layui.form;
+        var table = layui.table;
+        var dg = layui.dg;
+        var os = layui.dgcommon;
+        var laydate = layui.laydate
+
+        table.render({
+            elem: '#tablist'
+            , url: '@Url.Action("GetPageList")'
+            , page: true //开启分页
+            , toolbar: '#user-toolbar'
+            , defaultToolbar: [{
+                title: '@T("刷新")',
+                layEvent: 'refresh',
+                icon: 'layui-icon-refresh',
+            }, 'filter', 'print']
+            , cellMinWidth: 80
+            , cols: (()=>{
+                const list = [[
+                    { field: 'UId', title: '@T("UId")', width: 100 }
+                    , { field: 'UserName', title: '@T("用户名")', minWidth: 170  }
+                    , { field: 'RoleName', title: '@T("角色")', width: 130  }
+                    , { field: 'UpdateTime', title: '@T("最后更新时间")', width: 160 }
+                    // , { fixed: 'right', title: ' @T("操作")', toolbar: '#tool', width: 130 }
+                ]]
+
+                for (let i = 1; i <= 31; i++) {
+
+                    list[0].push({ field: `Day${i}`, title: `@T("${i}号")`, width: 80 })
+                    
+                }
+                
+                return list
+            })()
+            , limit: 13
+            , limits: [10, 13, 20, 30, 50, 100]
+            , height: 'full-100'
+            , id: 'tables'
+        });
+
+        window.active = {
+            reload: function () {
+                table.reload('tables', {
+                    @* page: {
+                        curr: 1
+                    }, *@
+                    where: {
+                        StartTime: $("#startTime").val(),
+                        EndTime: $("#endTime").val(),
+                        RoleId: $("#RoleId").val(),
+                        UName: $("#UName").val()
+                },
+                    page: {
+                    curr: 1
+                }
+                })
+            },
+            success: function (data) {
+                os.success(data);
+            }
+        }
+
+        table.on('toolbar(tool)', function (obj) {
+            if (obj.event === 'add') {
+                window.add();
+            } else if (obj.event === 'refresh') {
+                active.reload();
+            }
+        });
+
+        // 点击搜索事件
+        $("#Search").click(function () {
+            active.reload();
+        })
+
+
+        table.on('tool(tool)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                parent.layer.confirm('@T("确认删除吗")?', { btn: ["@T("确认")", "@T("取消")"], title: "@T("提示")" }, function (index) {
+                    $.post('@Url.Action("MemberDelete")', { Id: data.ID }, function (data) {
+                        if (data.success) {
+                            abp.notify.success('@T("删除成功")');
+                            active.reload();
+                        } else {
+                            abp.notify.warn(data.msg);
+                        }
+                    });
+                    parent.layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                window.edit(data);
+            }
+
+        });
+
+        window.saveCallback = function (data) {
+            layer.close(data.index);
+            abp.notify.success(data.msg);
+            table.reload("tables");
+        }
+
+        window.add = function () {
+            layer.open({
+                type: 2,
+                title: "@T("添加用户")",
+                content: "@Url.Action("Add")",
+                area: ["710px", "436px"],
+                shade: 0.1,
+                btn: ['@T("确定")', '@T("取消")'],
+                yes: function (index, layero) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+        window.edit = function (data) {
+            layer.open({
+                type: 2,
+                title: "@T("编辑用户")",
+                content: "@Url.Action("Edit")" + abp.utils.formatString("?id={0}", data.ID),
+                area: ["710px", "436px"],
+                shade: 0.1,
+                btn: ['@T("确定")', '@T("取消")'],
+                yes: function (index, layero) {
+                    window['layui-layer-iframe' + index].submitForm();
+                }
+            });
+        }
+
+          //时间插件
+        var startDate = laydate.render({
+            elem: '#startTime',
+            btns: ['clear', "confirm"],//只显示清空和确定按钮
+            type: 'month',       // 设置日期选择类型为年月
+            format: 'yyyy-MM',   // 设置日期的格式，这里是年-月
+            done: function (value, date) {
+                $("#startTime").val(value);
+                checkDateValidity();
+            },
+            choose: function (date) {
+                // 用户选择日期的回调函数
+                // 在这里可以处理用户选择日期后的逻辑
+                laydate.close(); // 关闭日期选择器弹窗
+            }
+        });
+
+        var endDate = laydate.render({
+            elem: '#endTime',
+            btns: ["clear", "confirm"],
+            type: 'month',       // 设置日期选择类型为年月
+            format: 'yyyy-MM',   // 设置日期的格式，这里是年-月
+            done: function (value, date) {
+                $("#endTime").val(value);
+                checkDateValidity();
+            },
+            choose: function (date) {
+                // 用户选择日期的回调函数
+                // 在这里可以处理用户选择日期后的逻辑
+                laydate.close(); // 关闭日期选择器弹窗
+            }
+        });
+
+        function checkDateValidity() {
+            var startValue = $("#startTime").val();
+            var endValue = $("#endTime").val();
+
+            if (startValue && endValue) {
+                var startDate = new Date(startValue + "-01");
+                var endDate = new Date(endValue + "-01");
+
+                if (startDate > endDate) {
+                    os.warning('@T("开始时间不能晚于结束时间，请重新选择。")');
+                    $("#startTime").val(""); // 清空开始时间输入框
+                    $("#endTime").val("");   // 清空结束时间输入框
+                }
+            }
+        }
+});
+</script>
+
+@*<script type="text/html" id="tool">
+ @if (this.Has((PermissionFlags)4)){
+    <a class="pear-btn pear-btn-primary pear-btn-xs" lay-event="edit"> @T("编辑")</a>
+ }
+  @if (this.Has((PermissionFlags)8)){
+    <a class="pear-btn pear-btn-danger pear-btn-xs" lay-event="del"> @T("删除")</a>
+  }
+</script>*@
+
+@*<script type="text/html" id="user-toolbar">
+ @if (this.Has((PermissionFlags)2)){
+    <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+        <i class="layui-icon  layui-icon-add-1"></i>
+        @T("新增")
+    </button>
+ }
+</script>
+*@
+
+@{
+}

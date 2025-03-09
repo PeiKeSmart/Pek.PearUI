@@ -1,0 +1,75 @@
+﻿@using System.Security.Cryptography
+@using System.Text
+@using DG.Web.Framework.Models
+@model List<MenuTree>
+@{
+    var calculateMenuId = new Func<string, string, string>((Name, Url) =>
+    {
+        using (var md5 = MD5.Create())
+        {
+            var hashTarget = string.IsNullOrEmpty(Url) ? Name : Url.ToUpper();
+            var md5ComputeHash = md5.ComputeHash(Encoding.UTF8.GetBytes(hashTarget));
+            var bitConverterResult = BitConverter.ToString(md5ComputeHash);
+            var replaceResult = bitConverterResult.Replace("-", "");
+            return replaceResult;
+        }
+    });
+}
+<!-- 菜 单 内 容 -->
+<div class="layui-side-scroll">
+    <div id="sideMenu">
+        <ul lay-filter="sideMenu" class="layui-nav arrow pear-menu layui-nav-tree pear-nav-tree">
+            @foreach (var menuItem in Model!)
+            {
+                <li class="layui-nav-item">
+                    @if (menuItem.Children == null)
+                    {
+                        <a menu-url="@menuItem.Url" class="site-demo-active" menu-type="1" menu-id="@calculateMenuId(menuItem.Name,menuItem.Url)" menu-title="@T(menuItem.DisplayName)">
+                            <i class="layui-icon @Html.Raw(menuItem.Icon)"></i>
+                            <span>@T(menuItem.DisplayName)</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="javascript:;" menu-type="0" menu-id="@calculateMenuId(menuItem.Name,menuItem.Url)">
+                            <i class="layui-icon @Html.Raw(menuItem.Icon)"></i>
+                            <span>@T(@menuItem.DisplayName)</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            @foreach (var subMenuItem in menuItem.Children)
+                            {
+                                <dd>
+                                    @if (subMenuItem.Children == null)
+                                    {
+                                        <a menu-url="@subMenuItem.Url" class="site-demo-active" menu-type="1" menu-id="@calculateMenuId(subMenuItem.Name,subMenuItem.Url)" menu-title="@T(subMenuItem.DisplayName)">
+                                            <i class="layui-icon @Html.Raw(subMenuItem.Icon)"></i>
+                                            <span>@T(@subMenuItem.DisplayName)</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:;" menu-type="0" menu-id="@calculateMenuId(subMenuItem.Name,subMenuItem.Url)">
+                                            <i class="iconfont">@Html.Raw(subMenuItem.Icon)</i>
+                                            <span>@T(@subMenuItem.DisplayName)</span>
+                                        </a>
+                                        <dl class="layui-nav-child">
+                                            @foreach (var subSubMenuItem in subMenuItem.Children)
+                                            {
+                                                <dd>
+                                                    <a menu-url="@subSubMenuItem.Url" class="site-demo-active" menu-type="1" menu-id="@calculateMenuId(subSubMenuItem.Name,subSubMenuItem.Url)" menu-title="@T(subSubMenuItem.DisplayName)">
+                                                        <i class="layui-icon @Html.Raw(subSubMenuItem.Icon)"></i>
+                                                        <span>@T(@subSubMenuItem.DisplayName)</span>
+                                                    </a>
+                                                </dd>
+                                            }
+                                        </dl>
+                                    }
+                                </dd>
+                            }
+                        </dl>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+</div>

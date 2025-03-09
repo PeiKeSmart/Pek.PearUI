@@ -1,0 +1,159 @@
+﻿@model AppVersion
+@{
+    var localizationSettings = LocalizationSettings.Current;
+}
+<style asp-location="true">
+    .totalcolor {
+        font-size: 18px;
+        color: #2db7f5;
+    }
+
+    .onlinecolor {
+        font-size: 18px;
+        color: #19be6b;
+    }
+
+    .noactivecolor {
+        font-size: 18px;
+        color: #f90;
+    }
+
+    .layui-card-header {
+        height: auto;
+    }
+
+    .dg-form .layui-form-label {
+        width: 80px;
+    }
+
+    .dg-form .layui-form-label {
+        width: auto;
+    }
+
+    #ExportDevices {
+        padding-left: 30px;
+    }
+
+    #ExportDevices i {
+        left: 65px;
+        right: auto;
+    }
+
+    xm-select {
+        min-height: 29px !important;
+        line-height: 29px !important;
+    }
+
+    xm-select .xm-label .xm-label-block {
+        height: 20px !important;
+        line-height: 20px !important;
+    }
+
+    .layui-table-cell {
+        padding: 0 9px !important;
+        height: auto !important;
+    }
+
+    .layui-table-fixed {
+        overflow: hidden;
+    }
+
+    .alignCenter {
+        width: 270px;
+    }
+
+    .layui-table td,
+    .layui-table th {
+        border-right: none;
+    }
+</style>
+<script asp-location="Head">
+    var pleaseSelect = '@T("请选择")';
+    var layuiPrint = '@T("打印")';
+    var layuiExport = '@T("导出")';
+    var layuiFilterColumn = '@T("筛选列")';
+    var layuiArticlePage = '@T("条/页")';
+    var layuiTotal = '@T("共")';
+    var layuiBtn = '@T("确定")';
+    var layuiGoPage = '@T("到第")';
+    var layuiPage = '@T("页")';
+    var layuiPrev = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNoData = '@T("无数据")';
+    var layuiAsc = '@T("升序")';
+    var layuiDesc = '@T("降序")';
+    var layuiCloseCurrent = '@T("关 闭 当 前")';
+    var layuiCloseOther = '@T("关 闭 其 他")';
+    var layuiCloseAll = '@T("关 闭 全 部")';
+    var layuiMenuStyle = '@T("菜单风格")';
+    var layuiTopStyle = '@T("顶部风格")';
+    var layuiThemeColor = '@T("主题配色")';
+    var layuiMoreSettings = '@T("更多设置")';
+    var layuiOpen = '@T("开")';
+    var layuiClose = '@T("关")';
+    var layuiMenu = '@T("菜单")';
+    var layuiView = '@T("视图")';
+    var layuiBanner = '@T("通栏")';
+    var layuiThroughColor = '@T("通色")';
+    var layuiFooter = '@T("页脚")';
+    var layuiSelectAll = '@T("全选")';
+    var layuiClear = '@T("清空")';
+    var layuiReverseSelection = '@T("反选")';
+    var layuiPeeling = '@T("换肤")';
+    var layuiNoDataYet = '@T("暂无数据")';
+    var layuiSearch = '@T("搜索")';
+    var layuiPrevious = '@T("上一页")';
+    var layuiNext = '@T("下一页")';
+    var layuiNotAllowClose = '@T("前页面不允许关闭")';
+    var layuiOpenAtMost = '@T("最多打开")';
+    var layuiTabs = '@T("个标签页")';
+</script>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="dgtable-body">
+                    <table class="layui-hide" id="tablist" lay-filter="tool"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script asp-location="Footer">
+
+    layui.use(['table', 'jquery', 'dgcommon'], function () {
+        var $ = layui.jquery,
+            table = layui.table,
+            os = layui.dgcommon;
+
+        var scrollLeft = 0;
+        var scrollTop = 0; //防止滚动条变换
+
+        table.render({
+            elem: '#tablist'
+            , url: '@Url.Action("ManageAppVersionLog", new { Version = Model.Version })'
+            , page: true //开启分页
+            , loading: true
+            , cols: [[
+                { field: 'Id', title: 'ID', width: 40 }
+                , { field: 'Os', title: '@T("平台")', minWidth: 80 }
+                , { field: 'Version', title: '@T("版本号")', minWidth: 60 }
+                , { field: 'CreateUser', title: '@T("请求用户")', minWidth: 180 }
+                , { field: 'CreateTime', title: '@T("请求时间")', minWidth: 150 }
+                , { field: 'CreateIP', title: '@T("请求地址")', minWidth: 135 }
+            ]]
+            , height: 'full-106'
+            , limit: 16
+            , limits: [10, 16, 20, 30, 50, 100]
+            , id: 'tables'
+            , smartReloadModel: true
+            , parseData: function (res) {
+                os.SetPageNum("Things");
+            }
+            , done: function () {
+                $('.layui-table-main').scrollTop(scrollTop)
+                $('.layui-table-main').scrollLeft(scrollLeft)
+            }
+        });
+    });
+</script>

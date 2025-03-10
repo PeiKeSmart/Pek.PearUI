@@ -5,16 +5,22 @@ using NewLife;
 using NewLife.Common;
 
 using Pek.Infrastructure;
+using Pek.NCubeUI;
+using Pek.NCubeUI.Areas.Admin;
 using Pek.VirtualFileSystem;
 
 using XCode.Membership;
 
-using YRY.Web.Controllers.Areas.Admin;
-using YRY.Web.Controllers.Common;
+namespace Pek.PearUI;
 
-namespace DH.Cube;
-
+/// <summary>
+/// 表示应用程序启动时配置服务和中间件的对象
+/// </summary>
 public class CubeStartup : IPekStartup {
+    /// <summary>
+    /// 配置添加的中间件的使用
+    /// </summary>
+    /// <param name="application"></param>
     public void Configure(IApplicationBuilder application)
     {
         // 修正系统名，确保可运行
@@ -49,11 +55,20 @@ public class CubeStartup : IPekStartup {
         }
     }
 
+    /// <summary>
+    /// 将区域路由写入数据库
+    /// </summary>
     public void ConfigureArea()
     {
         AreaBase.SetRoute<HomeController>(AdminArea.AreaName);
     }
 
+    /// <summary>
+    /// 添加并配置任何中间件
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <param name="webHostEnvironment"></param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
     }
@@ -66,6 +81,10 @@ public class CubeStartup : IPekStartup {
     {
     }
 
+    /// <summary>
+    /// 配置虚拟文件系统
+    /// </summary>
+    /// <param name="options"></param>
     public void ConfigureVirtualFileSystem(DHVirtualFileSystemOptions options)
     {
         options.FileSets.AddEmbedded<CubeStartup>(typeof(CubeStartup).Namespace);
@@ -80,6 +99,9 @@ public class CubeStartup : IPekStartup {
 
     }
 
+    /// <summary>
+    /// 升级处理逻辑
+    /// </summary>
     public void Update()
     {
 

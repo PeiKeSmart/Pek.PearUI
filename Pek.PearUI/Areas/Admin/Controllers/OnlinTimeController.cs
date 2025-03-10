@@ -1,4 +1,5 @@
-﻿using DG.Web.Framework;
+﻿using System.ComponentModel;
+using System.Dynamic;
 
 using DH.Entity;
 
@@ -8,16 +9,13 @@ using NewLife;
 using NewLife.Data;
 
 using Pek.Models;
-
-using System.ComponentModel;
-using System.Dynamic;
+using Pek.NCubeUI.Areas.Admin;
+using Pek.NCubeUI.Common;
+using Pek.PearUI.Common;
 
 using XCode.Membership;
 
-using YRY.Web.Controllers.Areas.Admin;
-using YRY.Web.Controllers.Common;
-
-namespace DH.Cube.Areas.Admin.Controllers;
+namespace Pek.PearUI.Areas.Admin.Controllers;
 
 /// <summary>
 /// 在线时间管理
@@ -26,7 +24,7 @@ namespace DH.Cube.Areas.Admin.Controllers;
 [Description("在线时间管理，管理会员活跃度")]
 [AdminArea]
 [DHMenu(64, ParentMenuName = "DHUser", CurrentMenuUrl = "~/{area}/OnlinTime", CurrentMenuName = "OnlinTimeList", LastUpdate = "20240124")]
-public class OnlinTimeController : BaseAdminControllerX {
+public class OnlinTimeController : PekCubeAdminControllerX {
     /// <summary>菜单顺序。扫描是会反射读取</summary>
     protected static Int32 MenuOrder { get; set; } = 64;
 

@@ -1,5 +1,4 @@
-﻿using DH;
-using DH.Entity;
+﻿using DH.Entity;
 
 using Pek.Infrastructure;
 using Pek.VirtualFileSystem;
@@ -7,9 +6,16 @@ using Pek.VirtualFileSystem;
 using XCode;
 using XCode.Membership;
 
-namespace DG.Cube;
+namespace Pek.PearUI;
 
+/// <summary>
+/// 表示应用程序启动时配置服务和中间件的对象
+/// </summary>
 public class DHCubeStartup : IPekStartup {
+    /// <summary>
+    /// 配置添加的中间件的使用
+    /// </summary>
+    /// <param name="application"></param>
     public void Configure(IApplicationBuilder application)
     {
 
@@ -22,6 +28,12 @@ public class DHCubeStartup : IPekStartup {
     {
     }
 
+    /// <summary>
+    /// 添加并配置任何中间件
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <param name="webHostEnvironment"></param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
         if (!DHSetting.Current.IsInstalled)
@@ -51,7 +63,7 @@ public class DHCubeStartup : IPekStartup {
             modelrole = Role.FindByID(3);
             modelrole.Name = "高级用户";
             modelrole.Remark = "业务管理人员，可以管理业务模块，可以分配授权用户等级";
-            if (!DG.Setting.Current.IsOnlyManager)
+            if (!DHSetting.Current.IsOnlyManager)
             {
                 modelrole.IsSystem = true;
             }
@@ -60,7 +72,7 @@ public class DHCubeStartup : IPekStartup {
             modelrole = Role.FindByID(4);
             modelrole.Name = "普通用户";
             modelrole.Remark = "普通业务人员，可以使用系统常规业务模块功能";
-            if (!DG.Setting.Current.IsOnlyManager)
+            if (!DHSetting.Current.IsOnlyManager)
             {
                 modelrole.IsSystem = true;
             }
@@ -75,7 +87,7 @@ public class DHCubeStartup : IPekStartup {
 
             modelrole.Name = "默认用户";
             modelrole.Remark = "新注册用户默认属于默认用户组";
-            if (!DG.Setting.Current.IsOnlyManager)
+            if (!DHSetting.Current.IsOnlyManager)
             {
                 modelrole.IsSystem = true;
             }
@@ -174,7 +186,7 @@ public class DHCubeStartup : IPekStartup {
     /// <summary>
     /// 获取此启动配置实现的顺序
     /// </summary>
-    public int StartupOrder => 99;
+    public Int32 StartupOrder => 99;
 
     /// <summary>
     /// 获取此启动配置实现的顺序。主要针对ConfigureMiddleware、UseRouting前执行的数据、UseAuthentication或者UseAuthorization后面 Endpoints前执行的数据

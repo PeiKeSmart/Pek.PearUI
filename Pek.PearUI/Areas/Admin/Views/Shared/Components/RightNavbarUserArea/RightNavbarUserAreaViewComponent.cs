@@ -1,17 +1,15 @@
-﻿using DG;
+﻿using Microsoft.AspNetCore.Mvc;
 
-using DH.Services.Components;
-
-using Microsoft.AspNetCore.Mvc;
+using Pek.NCubeUI.Components;
 
 using XCode.Membership;
 
-namespace DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarUserArea;
+namespace Pek.PearUI.Areas.Admin.Views.Shared.Components.RightNavbarUserArea;
 
 /// <summary>
 /// 顶部用户区域
 /// </summary>
-public class RightNavbarUserAreaViewComponent : DHViewComponent {
+public class RightNavbarUserAreaViewComponent : PekViewComponent {
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = new RightNavbarUserAreaViewModel

@@ -1,34 +1,31 @@
-﻿using DG.Web.Framework;
-
-using DH.Core.Infrastructure;
-using DH.Cube.Events.EventModel;
-using DH.Services.Membership;
+﻿using System.ComponentModel;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 using NewLife;
+using NewLife.Cube;
 using NewLife.Log;
 
 using Pek.Events;
+using Pek.Infrastructure;
 using Pek.Models;
-
-using System.ComponentModel;
+using Pek.NCubeUI.Areas.Admin;
+using Pek.NCubeUI.Common;
+using Pek.PearUI.Common;
+using Pek.PearUI.Events.EventModel;
 
 using XCode.Membership;
 
-using YRY.Web.Controllers.Areas.Admin;
-using YRY.Web.Controllers.Common;
-
-namespace DH.Cube.Areas.Admin.Controllers;
+namespace Pek.PearUI.Areas.Admin.Controllers;
 
 /// <summary>首页</summary>
 [DisplayName("首页")]
 [Description("后台登录之后的首页")]
 [AdminArea]
 [DHMenu(100, ParentMenuName = "Home", ParentMenuDisplayName = "工作空间", ParentMenuUrl = "~/{area}/Home/DashBoard", ParentMenuOrder = 100, ParentIcon = "layui-icon-console", CurrentMenuUrl = "~/{area}/Home/DashBoard", CurrentMenuName = "DashBoard", CurrentVisible = false, LastUpdate = "20240124")]
-public class HomeController : BaseAdminControllerX {
+public class HomeController : PekCubeAdminControllerX {
     /// <summary>菜单顺序。扫描是会反射读取</summary>
     protected static Int32 MenuOrder { get; set; } = 100;
 
@@ -45,16 +42,20 @@ public class HomeController : BaseAdminControllerX {
         _provider = manageProvider;
     }
 
+    /// <summary>
+    /// 管理后台首页
+    /// </summary>
+    /// <returns></returns>
     [DisplayName("管理后台首页")]
     [AllowAnonymous]
     public IActionResult Index()
     {
         var user = _provider.TryLogin(HttpContext);
 
-        if (user == null || !user.Enable || ManageProvider.User.RoleID == 0) return RedirectToAction("Index", "Login", new { r = Request.GetEncodedPathAndQuery() });
+        if (user == null || !user.Enable || ManageProvider.User?.RoleID == 0) return RedirectToAction("Index", "Login", new { r = Request.GetEncodedPathAndQuery() });
 
-        var _eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-        _eventPublisher.Publish(new UserExEvent(user.ID));
+        var _eventPublisher = NewLife.Model.ObjectContainer.Provider.GetPekService<IEventPublisher>();
+        _eventPublisher?.Publish(new UserExEvent(user.ID));
 
         //!!! 租户切换
         var set = DHSetting.Current;
@@ -79,7 +80,7 @@ public class HomeController : BaseAdminControllerX {
         var model = XCode.Membership.Menu.FindByName("Home");
         if (model != null && model.ParentID == 0)
         {
-            return LocalRedirect(model.Url);
+            return LocalRedirect(model.Url!);
         }
 
         return RedirectToAction("DashBoard");

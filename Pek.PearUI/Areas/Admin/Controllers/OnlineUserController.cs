@@ -1,4 +1,4 @@
-﻿using DG.Web.Framework;
+﻿using System.ComponentModel;
 
 using DH.Entity;
 
@@ -8,15 +8,13 @@ using NewLife;
 using NewLife.Data;
 
 using Pek.Models;
-
-using System.ComponentModel;
+using Pek.NCubeUI.Areas.Admin;
+using Pek.NCubeUI.Common;
+using Pek.PearUI.Common;
 
 using XCode.Membership;
 
-using YRY.Web.Controllers.Areas.Admin;
-using YRY.Web.Controllers.Common;
-
-namespace DH.Cube.Areas.Admin.Controllers;
+namespace Pek.PearUI.Areas.Admin.Controllers;
 
 /// <summary>
 /// 在线用户管理
@@ -25,7 +23,7 @@ namespace DH.Cube.Areas.Admin.Controllers;
 [Description("用于管理一定时间内有操作的用户数据")]
 [AdminArea]
 [DHMenu(65, ParentMenuName = "DHUser", CurrentMenuUrl = "~/{area}/OnlineUser", CurrentMenuName = "OnlineUserList", LastUpdate = "20240124")]
-public class OnlineUserController : BaseAdminControllerX {
+public class OnlineUserController : PekCubeAdminControllerX {
 
     /// <summary>菜单顺序。扫描是会反射读取</summary>
     protected static Int32 MenuOrder { get; set; } = 65;

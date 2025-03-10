@@ -1,16 +1,16 @@
-﻿using DH.Core;
-using DH.Core.Infrastructure;
-using DH.Entity;
-using DH.Services.Components;
+﻿using DH.Entity;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarLanguageSwitch;
+using Pek.NCube;
+using Pek.NCubeUI.Components;
+
+namespace Pek.PearUI.Areas.Admin.Views.Shared.Components.RightNavbarLanguageSwitch;
 
 /// <summary>
 /// 顶部翻译
 /// </summary>
-public class RightNavbarLanguageSwitchViewComponent : DHViewComponent {
+public class RightNavbarLanguageSwitchViewComponent : PekViewComponent {
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var _workContext = EngineContext.Current.Resolve<IWorkContext>();

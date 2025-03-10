@@ -1,5 +1,4 @@
-﻿using DH.Cube.Areas.Admin.Controllers;
-using DH.Entity;
+﻿using DH.Entity;
 
 using NewLife;
 using NewLife.Common;
@@ -7,6 +6,7 @@ using NewLife.Common;
 using Pek.Infrastructure;
 using Pek.NCubeUI;
 using Pek.NCubeUI.Areas.Admin;
+using Pek.PearUI.Areas.Admin.Controllers;
 using Pek.VirtualFileSystem;
 
 using XCode.Membership;
@@ -46,10 +46,12 @@ public class CubeStartup : IPekStartup {
             var modelDetail = UserDetail.FindById(model!.ID);
             if (modelDetail == null)
             {
-                modelDetail = new UserDetail();
-                modelDetail.Id = model.ID;
-                modelDetail.TenantId = 1;
-                modelDetail.DepartmentIds = ",1,";
+                modelDetail = new UserDetail
+                {
+                    Id = model.ID,
+                    TenantId = 1,
+                    DepartmentIds = ",1,"
+                };
                 modelDetail.Insert();
             }
         }
@@ -145,7 +147,7 @@ public class CubeStartup : IPekStartup {
     /// <summary>
     /// 获取此启动配置实现的顺序
     /// </summary>
-    public int StartupOrder => 101; //常见服务应在错误处理程序之后加载
+    public Int32 StartupOrder => 101; //常见服务应在错误处理程序之后加载
 
     /// <summary>
     /// 获取此启动配置实现的顺序。主要针对ConfigureMiddleware、UseRouting前执行的数据、UseAuthentication或者UseAuthorization后面 Endpoints前执行的数据

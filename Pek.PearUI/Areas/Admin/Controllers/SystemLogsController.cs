@@ -1,26 +1,23 @@
-﻿using DG.Web.Framework;
+﻿using System.ComponentModel;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Pek;
 using Pek.IO;
 using Pek.Models;
-
-using System.ComponentModel;
+using Pek.NCubeUI.Areas.Admin;
+using Pek.NCubeUI.Common;
+using Pek.PearUI.Common;
 
 using XCode.Membership;
 
-using YRY.Web.Controllers.Areas.Admin;
-using YRY.Web.Controllers.Common;
-
-namespace DH.Cube.Areas.Admin.Controllers;
+namespace Pek.PearUI.Areas.Admin.Controllers;
 
 /// <summary>系统日志</summary>
 [DisplayName("系统日志")]
 [Description("系统日志的管理")]
 [AdminArea]
 [DHMenu(49, ParentMenuName = "System", CurrentMenuUrl = "~/{area}/SystemLogs", CurrentMenuName = "SystemLogs", LastUpdate = "20240124")]
-public class SystemLogsController : BaseAdminControllerX {
+public class SystemLogsController : PekCubeAdminControllerX {
     /// <summary>菜单顺序。扫描是会反射读取</summary>
     protected static Int32 MenuOrder { get; set; } = 49;
 

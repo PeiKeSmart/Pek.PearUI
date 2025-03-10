@@ -1,32 +1,29 @@
-﻿using DG.Web.Framework;
+﻿using System.ComponentModel;
 
 using DH.Entity;
-using DH.Services.Services;
 
 using Microsoft.AspNetCore.Mvc;
 
 using NewLife;
+using NewLife.Cube.Services;
 using NewLife.Data;
 
-using Pek;
 using Pek.Models;
-
-using System.ComponentModel;
+using Pek.NCubeUI.Areas.Admin;
+using Pek.NCubeUI.Common;
+using Pek.PearUI.Common;
 
 using XCode;
 using XCode.Membership;
 
-using YRY.Web.Controllers.Areas.Admin;
-using YRY.Web.Controllers.Common;
-
-namespace DH.Cube.Areas.Admin.Controllers;
+namespace Pek.PearUI.Areas.Admin.Controllers;
 
 /// <summary>定时作业</summary>
 [DisplayName("定时作业")]
 [Description("系统定时作业的管理")]
 [AdminArea]
 [DHMenu(55, ParentMenuName = "System", CurrentMenuUrl = "~/{area}/Jobs", CurrentMenuName = "Jobs", LastUpdate = "20240415")]
-public class JobsController : BaseAdminControllerX {
+public class JobsController : PekCubeAdminControllerX {
     /// <summary>菜单顺序。扫描是会反射读取</summary>
     protected static Int32 MenuOrder { get; set; } = 55;
 
@@ -129,14 +126,16 @@ public class JobsController : BaseAdminControllerX {
             return Json(res);
         }
 
-        model = new CronJob();
-        model.Name = Name;
-        model.DisplayName = DisplayName;
-        model.Cron = Cron;
-        model.Method = Method;
-        model.Argument = Argument;
-        model.Enable = Enable == "on";
-        model.Remark = Remark;
+        model = new CronJob
+        {
+            Name = Name,
+            DisplayName = DisplayName,
+            Cron = Cron,
+            Method = Method,
+            Argument = Argument,
+            Enable = Enable == "on",
+            Remark = Remark
+        };
 
         var next = DateTime.MinValue;
         foreach (var item in model.Cron.Split(";"))

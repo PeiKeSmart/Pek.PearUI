@@ -2,8 +2,11 @@
 
 using XCode.Membership;
 
-namespace DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarUserArea;
+namespace Pek.PearUI.Areas.Admin.Views.Shared.Components.RightNavbarUserArea;
 
+/// <summary>
+/// 顶部用户区域
+/// </summary>
 public class RightNavbarUserAreaViewModel {
     /// <summary>
     /// 用户信息
@@ -15,7 +18,11 @@ public class RightNavbarUserAreaViewModel {
     /// </summary>
     public Boolean IsMultiTenancyEnabled { get; set; }
 
-    public string GetShownLoginName()
+    /// <summary>
+    /// 获取显示的登录名
+    /// </summary>
+    /// <returns></returns>
+    public String GetShownLoginName()
     {
         var userName = LoginInformations!.Name;
 

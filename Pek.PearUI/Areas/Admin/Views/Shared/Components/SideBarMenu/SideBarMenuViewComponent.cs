@@ -8,6 +8,10 @@ namespace Pek.PearUI.Areas.Admin.Views.Shared.Components.SideBarMenu;
 /// 左侧菜单
 /// </summary>
 public class SideBarMenuViewComponent : PekViewComponent {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var menus = GetMenu().Where(e => !e.FullName.Contains("NewLife.", StringComparison.OrdinalIgnoreCase) && !e.FullName.Contains("IoTWeb.", StringComparison.OrdinalIgnoreCase)).ToList();

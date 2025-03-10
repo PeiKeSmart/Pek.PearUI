@@ -1,6 +1,6 @@
-﻿@using DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarLanguageSwitch
-@using DH.Cube.Areas.Admin.Views.Shared.Components.RightNavbarUserArea
-@using DH.Cube.Areas.Admin.Views.Shared.Components.SideBarMenu
+﻿@using Pek.PearUI.Areas.Admin.Views.Shared.Components.RightNavbarLanguageSwitch
+@using Pek.PearUI.Areas.Admin.Views.Shared.Components.RightNavbarUserArea
+@using Pek.PearUI.Areas.Admin.Views.Shared.Components.SideBarMenu
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 
@@ -25,14 +25,13 @@
     .layui-nav-child a {
         cursor: pointer;
     }
-    @if (language.UniqueSeoCode=="en")
+    @if (Language?.UniqueSeoCode == "en")
     {
         <text>
              .pear-tab-menu{
                  width:120px !important;
              }
         </text>
-
     }
 </style>
 <script asp-location="Head">
@@ -81,7 +80,7 @@
     var loginUrl = '@Url.Action("Index", "Login")';
     var memberGetAccessToken = '@Url.Action("GetMemberAccessToken", "Site", new { Area = "" })';
 
-    var sslEnabled = @DHSetting.Current.SslEnabled;
+    var sslEnabled = @(DHSetting.Current.SslEnabled);
     var currentURL = window.location.href;
 
     if (!currentURL.includes("localhost")) {

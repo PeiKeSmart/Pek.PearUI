@@ -165,8 +165,8 @@ public class AppVersionController : PekCubeAdminControllerX {
     {
         var result = new DResult();
 
-        UploadInfo Model = null;
-        IDictionary<string, object> dic = null;
+        UploadInfo? Model = null;
+        IDictionary<String, Object?>? dic = null;
         if (UpdateId > 0)
         {
             Model = UploadInfo.FindById(UpdateId);
@@ -176,7 +176,7 @@ public class AppVersionController : PekCubeAdminControllerX {
                 return Json(result);
             }
 
-            dic = JsonParser.Decode(Model.Content);
+            dic = JsonParser.Decode(Model.Content!);
         }
 
         var model = new AppVersion
@@ -263,7 +263,7 @@ public class AppVersionController : PekCubeAdminControllerX {
             return Json(result);
         }
 
-        var saveFileName = model.FilePath.GetFullPath();
+        var saveFileName = model.FilePath?.GetFullPath();
         if (!saveFileName.IsNullOrWhiteSpace())
         {
             var file = saveFileName.AsFile();

@@ -39,6 +39,6 @@ public class RightNavbarUserAreaViewModel {
 
         return userDetail.Tenant == null
             ? ".\\" + userName
-            : userDetail.Tenant.TenancyName + "\\" + userName;
+            : userDetail.Tenant.Name + "\\" + userName;
     }
 }

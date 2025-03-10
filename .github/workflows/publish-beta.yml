@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-        - 'Pek.DsMallUI/**'
+        - 'Pek.PearUI/**'
   pull_request:
     branches: [ main ]
     paths:
-        - 'Pek.DsMallUI/**'
+        - 'Pek.PearUI/**'
   workflow_dispatch:
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
         dotnet build -c Release --version-suffix ${{ env.VERSION }}
     - name: Pack
       run: |
-        dotnet pack --no-build --version-suffix ${{ env.VERSION }} -c Release -o out Pek.DsMallUI/Pek.DsMallUI.csproj
+        dotnet pack --no-build --version-suffix ${{ env.VERSION }} -c Release -o out Pek.PearUI/Pek.PearUI.csproj
 
     - name: Publish
       run: |

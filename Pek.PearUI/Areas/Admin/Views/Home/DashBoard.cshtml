@@ -17,7 +17,7 @@
 
     var site = SiteInfo.FindDefault();
 
-    PekHtml.AppendTitleParts(T($"{site?.SiteName}").Text);
+    // PekHtml.AppendTitleParts(T($"{site?.SiteName}").Text);
 
     var dgPage = (Pek.Webs.HttpContext.Current.Request.RouteValues["controller"] + "_" + Pek.Webs.HttpContext.Current.Request.RouteValues["action"]).ToLower();
 }

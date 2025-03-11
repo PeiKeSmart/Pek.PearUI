@@ -10,5 +10,7 @@
     PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib/microsoft/signalr/dist/browser/signalr.js");
     PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/libs/pear/pear.js");
     PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/libs/layui/layui.js");
+
+    ViewBag.BodyClass = "layui-layout-body pear-admin";
 }
 @RenderBody()

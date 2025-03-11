@@ -5,5 +5,10 @@
     PekHtml.AppendCssFileParts("~/libs/pear/css/pear.css");
 
     // Script
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib/microsoft/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib/msgpack5/dist/msgpack5.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib/microsoft/signalr/dist/browser/signalr.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/libs/pear/pear.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/libs/layui/layui.js");
 }
 @RenderBody()

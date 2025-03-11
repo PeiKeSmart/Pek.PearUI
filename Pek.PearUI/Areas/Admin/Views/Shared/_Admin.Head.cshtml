@@ -1,0 +1,59 @@
+﻿@inject IEventPublisher eventPublisher
+
+@{
+    var site = SiteInfo.GetDefaultSeo();
+
+    // 自定义标签
+    if (!String.IsNullOrEmpty(DHSetting.Current.CustomHeadTags))
+    {
+        PekHtml.AppendHeadCustomParts(DHSetting.Current.CustomHeadTags);
+    }
+
+    // 事件
+    await eventPublisher.PublishAsync(new PageRenderingEvent(PekHtml));
+
+    var title = PekHtml.GenerateTitle();
+    var description = PekHtml.GenerateMetaDescription();
+    var keywords = PekHtml.GenerateMetaKeywords();
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@PekHtml.GeneratePageCssClasses()">
+<head>
+    <title>@title</title>
+
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@description" />
+    <meta name="keywords" content="@keywords" />
+    <meta name="generator" content="DengHao" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @PekHtml.GenerateHeadCustom()
+    @*这用于使主题能够向头部注入内容*@
+    @await Html.PartialAsync("Head")
+
+    @PekHtml.GenerateCssFiles()
+
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @PekHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
+    @*插入 favicon 和应用程序图标头部代码*@
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
+    @PekHtml.GenerateScripts(ResourceLocation.Head)
+    @PekHtml.GenerateInlineCss()
+    @PekHtml.GenerateInlineScripts(ResourceLocation.Head)
+
+    @Html.Raw(site.HeaderCustomHtml)
+    <script asp-location="Head">
+
+    </script>
+</head>
+<body>
+    <pek-antiforgery-token />
+    @RenderBody()
+
+    @PekHtml.GenerateScripts(ResourceLocation.Footer)
+    @PekHtml.GenerateInlineScripts(ResourceLocation.Footer)
+
+    @Html.Raw(site.FooterCustomHtml)
+</body>
+</html>

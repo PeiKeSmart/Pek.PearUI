@@ -1,8 +1,8 @@
 ﻿@{
-    Html.AppendTitleParts(T("系统日志").Text);
+    PekHtml.AppendTitleParts(T("系统日志").Text);
 
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/dtree.css");
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/font/dtreefont.css");
+    PekHtml.AppendCssFileParts("~/libs/pear/css/module/dtree/dtree.css");
+    PekHtml.AppendCssFileParts("~/libs/pear/css/module/dtree/font/dtreefont.css");
 }
 
 <style asp-location="true">

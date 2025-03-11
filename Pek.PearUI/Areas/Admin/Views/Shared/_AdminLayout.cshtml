@@ -1,50 +1,59 @@
-﻿@inject IWorkContext workContext
+﻿@inject IEventPublisher eventPublisher
+
 @{
-    var language = workContext.WorkingLanguage;
+    var site = SiteInfo.GetDefaultSeo();
 
-    var addDefaultTitle = false;
-
-    if (ViewBag.AddDefaultTitle != null)
+    // 自定义标签
+    if (!String.IsNullOrEmpty(DHSetting.Current.CustomHeadTags))
     {
-        addDefaultTitle = ViewBag.AddDefaultTitle;
+        PekHtml.AppendHeadCustomParts(DHSetting.Current.CustomHeadTags);
     }
+
+    // 事件
+    await eventPublisher.PublishAsync(new PageRenderingEvent(PekHtml));
+
+    var title = PekHtml.GenerateTitle();
+    var description = PekHtml.GenerateMetaDescription();
+    var keywords = PekHtml.GenerateMetaKeywords();
 }
 <!DOCTYPE html>
-<html lang="@language.LanguageCulture" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.DGPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@PekHtml.GeneratePageCssClasses()">
 <head>
-    <meta charset="utf-8">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>@Html.DGTitle(addDefaultTitle)</title>
-    @Html.DGHeadCustom()
-    <!-- 依 赖 样 式 -->
-    <link rel="stylesheet" href="~/libs/pear/css/pear.css" asp-append-version="true" />
-    @Html.DGCssFiles(ResourceLocation.Head)
-    <script>
-        var logoutUrl = '@Url.Action("Index", "Logout", new { ReturnState = 1 })';
-        var refreshTokenUrl = '@Url.Action("RefreshToken", "Site", new { Area = "" })';
-        var loginUrl = '@Url.Action("Index", "Login")';
-        var memberGetAccessToken = '@Url.Action("GetMemberAccessToken", "Site", new { Area = "" })';
+    <title>@title</title>
+
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@description" />
+    <meta name="keywords" content="@keywords" />
+    <meta name="generator" content="DengHao" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @PekHtml.GenerateHeadCustom()
+    @*这用于使主题能够向头部注入内容*@
+    @await Html.PartialAsync("Head")
+
+    @PekHtml.GenerateCssFiles()
+
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @PekHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
+    @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
+    @*插入 favicon 和应用程序图标头部代码*@
+    @await Component.InvokeAsync(typeof(FaviconViewComponent))
+    @PekHtml.GenerateScripts(ResourceLocation.Head)
+    @PekHtml.GenerateInlineCss()
+    @PekHtml.GenerateInlineScripts(ResourceLocation.Head)
+
+    @Html.Raw(site.HeaderCustomHtml)
+    <script asp-location="Head">
+
     </script>
-    @Html.DGScripts(ResourceLocation.Head)
-    @Html.DGCanonicalUrls()
-    @Html.DGInlineCss(ResourceLocation.Head)
-    @Html.DGInlineScripts(ResourceLocation.Head)
-    <!--Powered by DengHao - https://www.deng-hao.com-->
 </head>
-<body class="layui-layout-body pear-admin">
+<body>
+    <pek-antiforgery-token />
     @RenderBody()
 
-    <!-- 依 赖 脚 本 -->
-    <script src="~/libs/layui/layui.js" asp-append-version="true"></script>
-    <script src="~/libs/pear/pear.js" asp-append-version="true"></script>
-    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
-    <script src="~/lib/msgpack5/dist/msgpack5.js" asp-append-version="true"></script>
-    <script src="~/lib/microsoft/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.js" asp-append-version="true"></script>
+    @PekHtml.GenerateScripts(ResourceLocation.Footer)
+    @PekHtml.GenerateInlineScripts(ResourceLocation.Footer)
 
-    @Html.DGCssFiles(ResourceLocation.Footer)
-    @Html.DGScripts(ResourceLocation.Footer)
-    @Html.DGInlineScripts(ResourceLocation.Footer)
+    @Html.Raw(site.FooterCustomHtml)
 </body>
 </html>

@@ -11,9 +11,13 @@ namespace Pek.PearUI.Areas.Admin.Views.Shared.Components.RightNavbarLanguageSwit
 /// 顶部翻译
 /// </summary>
 public class RightNavbarLanguageSwitchViewComponent : PekViewComponent {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var _workContext = EngineContext.Current.Resolve<IWorkContext>();
+        var _workContext = Pek.Webs.HttpContext.Current.RequestServices.GetRequiredService<IWorkContext>();
 
         var model = new RightNavbarLanguageSwitchViewModel
         {

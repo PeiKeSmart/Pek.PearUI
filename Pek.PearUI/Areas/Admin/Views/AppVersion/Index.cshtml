@@ -1,9 +1,9 @@
 ﻿@model DH.Entity.RoleEx
 @{
-    Html.AppendTitleParts(T("App版本").Text);
+    PekHtml.AppendTitleParts(T("App版本").Text);
 
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/dtree.css");
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/libs/pear/css/module/dtree/font/dtreefont.css");
+    PekHtml.AppendCssFileParts("~/libs/pear/css/module/dtree/dtree.css");
+    PekHtml.AppendCssFileParts("~/libs/pear/css/module/dtree/font/dtreefont.css");
     var list = ViewBag.Role as IList<Role>;
     var dgPage = (Pek.Webs.HttpContext.Current.Request.RouteValues["controller"] + "_" + Pek.Webs.HttpContext.Current.Request.RouteValues["action"]).ToLower();
 }

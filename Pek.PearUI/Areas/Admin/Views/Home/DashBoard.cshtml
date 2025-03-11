@@ -5,19 +5,19 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 
     // Css
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/css/dg.css");
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/css/admin.css");
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/css/loader.css");
+    PekHtml.AppendCssFileParts("~/css/dg.css");
+    PekHtml.AppendCssFileParts("~/css/admin.css");
+    PekHtml.AppendCssFileParts("~/css/loader.css");
 
     // Script
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/dg.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/Storage.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/initSignalr.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/jquery.min.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/dg.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/Storage.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/initSignalr.js");
+    PekHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/jquery.min.js");
 
     var site = SiteInfo.FindDefault();
 
-    Html.AppendTitleParts(T($"{site?.SiteName}").Text);
+    PekHtml.AppendTitleParts(T($"{site?.SiteName}").Text);
 
     var dgPage = (Pek.Webs.HttpContext.Current.Request.RouteValues["controller"] + "_" + Pek.Webs.HttpContext.Current.Request.RouteValues["action"]).ToLower();
 }

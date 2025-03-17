@@ -22,7 +22,7 @@ namespace Pek.PearUI.Areas.Admin.Controllers;
 [DisplayName("定时作业")]
 [Description("系统定时作业的管理")]
 [AdminArea]
-[DHMenu(55, ParentMenuName = "System", CurrentMenuUrl = "~/{area}/Jobs", CurrentMenuName = "Jobs", LastUpdate = "20240415")]
+[DHMenu(55, ParentMenuName = "System", ParentMenuDisplayName = "控制面板", ParentMenuUrl = "", ParentMenuOrder = 10, ParentIcon = "layui-icon-set-fill", CurrentMenuUrl = "~/{area}/Jobs", CurrentMenuName = "Jobs", LastUpdate = "20240415")]
 public class JobsController : PekCubeAdminControllerX {
     /// <summary>菜单顺序。扫描是会反射读取</summary>
     protected static Int32 MenuOrder { get; set; } = 55;

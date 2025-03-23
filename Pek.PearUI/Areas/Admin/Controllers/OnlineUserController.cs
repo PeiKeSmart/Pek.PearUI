@@ -22,7 +22,7 @@ namespace Pek.PearUI.Areas.Admin.Controllers;
 [DisplayName("在线用户")]
 [Description("用于管理一定时间内有操作的用户数据")]
 [AdminArea]
-[DHMenu(65, ParentMenuName = "DHUser", CurrentMenuUrl = "~/{area}/OnlineUser", CurrentMenuName = "OnlineUserList", LastUpdate = "20240124")]
+[DHMenu(65, ParentMenuName = "DHUser", ParentMenuDisplayName = "用户管理", ParentMenuUrl = "", ParentMenuOrder = 20, ParentIcon = "layui-icon-user", CurrentMenuUrl = "~/{area}/OnlineUser", CurrentMenuName = "OnlineUserList", LastUpdate = "20240124")]
 public class OnlineUserController : PekCubeAdminControllerX {
 
     /// <summary>菜单顺序。扫描是会反射读取</summary>

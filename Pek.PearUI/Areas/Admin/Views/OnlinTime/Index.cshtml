@@ -21,7 +21,7 @@
     }
 
     .layui-table-tool {
-        margin-top:-10px;
+        margin-top: -10px;
         z-index: 1;
     }
 </style>
@@ -69,37 +69,36 @@
 
 <form class="layui-form dg-form">
     <div class="layui-form-item" id="search" style="margin-bottom: 3px;">
-            <div class="layui-inline" style="padding-top: 10px;">
-                <label class="layui-form-label" style="width: auto">@T("筛选时间")：</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="startTime" id="startTime" readonly placeholder="@T("开始时间")" autocomplete="off" class="layui-input">
-                </div>
-                <div class="layui-form-mid">-</div>
-                <div class="layui-input-inline">
-                    <input type="text" name="endTime" id="endTime" readonly placeholder="@T("结束时间")" autocomplete="off" class="layui-input">
-                </div>
+        <div class="layui-inline" style="padding-top: 10px;">
+            <label class="layui-form-label" style="width: auto">@T("筛选时间")：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="startTime" id="startTime" readonly placeholder="@T("开始时间")" autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-inline">
-                <label class="layui-form-label"> @T("角色")：</label>
-                <div class="layui-input-inline seller-inline-3">
-                    <select name="RoleId" id="RoleId" lay-filter="RoleId">
-                        <option value="0">@T("全部")</option>
-                        @foreach (var item in Roles!)
-                        {
-                            <!option value="@item.ID">@item.Name</!option>
-                        }
-                    </select>
-                </div>
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline">
+                <input type="text" name="endTime" id="endTime" readonly placeholder="@T("结束时间")" autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-inline">
-                <label class="layui-form-label"> @T("用户名")：</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="UName" id="UName" placeholder="@T("用户名")" autocomplete="off" class="layui-input">
-                </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label"> @T("角色")：</label>
+            <div class="layui-input-inline seller-inline-3">
+                <select name="RoleId" id="RoleId" lay-filter="RoleId">
+                    <option value="0">@T("全部")</option>
+                    @foreach (var item in Roles!)
+                    {
+                        <!option value="@item.ID">@item.Name</!option>
+                    }
+                </select>
             </div>
-            <div class="layui-inline">
-                <button type="button" class="layui-btn layui-btn-sm" data-type="Search" id="Search">@T("搜索") </button>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label"> @T("用户名")：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="UName" id="UName" placeholder="@T("用户名")" autocomplete="off" class="layui-input">
             </div>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-sm" data-type="Search" id="Search">@T("搜索") </button>
         </div>
     </div>
 </form>
@@ -133,19 +132,23 @@
             , cellMinWidth: 80
             , cols: (()=>{
                 const list = [[
-                    { field: 'UId', title: '@T("UId")', width: 100 }
-                    , { field: 'UserName', title: '@T("用户名")', minWidth: 170  }
-                    , { field: 'RoleName', title: '@T("角色")', width: 130  }
-                    , { field: 'UpdateTime', title: '@T("最后更新时间")', width: 160 }
+                    { field: 'UId', title: 'UId', width: 80 }
+                    , { field: 'UserName', title: '@T("用户名")', minWidth: 150 }
+                    , { field: 'RoleName', title: '@T("角色")', minWidth: 100 }
+                    , { field: 'UpdateTime', title: '@T("最后更新时间")', minWidth: 150, sort: true }
+                    , { field: 'Year', title: '@T("年")', minWidth: 60 }
+                    , { field: 'Month', title: '@T("月")', minWidth: 60 }
+                    , { field: 'MonthTimes', title: '@T("本月在线（分）")', minWidth: 140, sort: true }
+                    , { field: 'DayTimes', title: '@T("今天在线（分）")', minWidth: 140, sort: true }
                     // , { fixed: 'right', title: ' @T("操作")', toolbar: '#tool', width: 130 }
                 ]]
 
                 for (let i = 1; i <= 31; i++) {
 
                     list[0].push({ field: `Day${i}`, title: `@T("${i}号")`, width: 80 })
-                    
+
                 }
-                
+
                 return list
             })()
             , limit: 13
@@ -157,18 +160,15 @@
         window.active = {
             reload: function () {
                 table.reload('tables', {
-                    @* page: {
-                        curr: 1
-                    }, *@
                     where: {
                         StartTime: $("#startTime").val(),
                         EndTime: $("#endTime").val(),
                         RoleId: $("#RoleId").val(),
                         UName: $("#UName").val()
-                },
+                    },
                     page: {
-                    curr: 1
-                }
+                        curr: 1
+                    }
                 })
             },
             success: function (data) {
@@ -188,7 +188,6 @@
         $("#Search").click(function () {
             active.reload();
         })
-
 
         table.on('tool(tool)', function (obj) {
             var data = obj.data;
@@ -244,7 +243,7 @@
             });
         }
 
-          //时间插件
+        //时间插件
         var startDate = laydate.render({
             elem: '#startTime',
             btns: ['clear', "confirm"],//只显示清空和确定按钮
@@ -292,7 +291,7 @@
                 }
             }
         }
-});
+    });
 </script>
 
 @*<script type="text/html" id="tool">

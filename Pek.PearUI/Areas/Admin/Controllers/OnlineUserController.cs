@@ -4,6 +4,7 @@ using DH.Entity;
 
 using Microsoft.AspNetCore.Mvc;
 
+using NewLife;
 using NewLife.Data;
 
 using Pek.Models;
@@ -56,7 +57,34 @@ public class OnlineUserController : PekCubeAdminControllerX {
             Sort = UserOnline._.ID,
             Desc = true,
         };
-        var list = UserOnline.Search(null!, pages);
+        var list = UserOnline.Search(null!, pages).Select(e =>
+        {
+            return new
+            {
+                e.ID,
+                e.UserID,
+                e.Name,
+                e.SessionID,
+                e.OAuthProvider,
+                e.Times,
+                e.Page,
+                e.Platform,
+                e.OS,
+                e.Device,
+                e.Brower,
+                e.NetType,
+                e.DeviceId,
+                e.Status,
+                e.OnlineTime,
+                e.LastError,
+                e.Address,
+                e.TraceId,
+                e.CreateIP,
+                CreateTime = e.CreateTime.ToFullString(),
+                e.UpdateIP,
+                UpdateTime = e.UpdateTime.ToFullString(),
+            };
+        });
 
         return Json(new { code = 0, msg = "success", count = pages.TotalCount, data = list });
     }

@@ -96,13 +96,28 @@
             }, 'filter', 'print']
             , cellMinWidth: 80
             , cols: [[
-                { field: 'Uid', title: '@T("UID")',width:80  }
-                , { field: 'Sid', title: '@T("Sessionid")',width:180  }
-                , { field: 'NickName', title: '@T("昵称")',width:180  }
-                , { field: 'Ip', title: '@T("用户IP")',width:140  }
-                , { field: 'Region', title: '@T("网络环境")',width:120  }
-                , { field: 'Clicks', title: '@T("请求次数")',width:100 }
-                , { field: 'UserAgent', title: '@T("设备信息")',minWidth:480 }
+                { field: 'ID', title: '@T("ID")',width:80  }
+                , { field: 'UserID', title: '@T("UId")',width:180  }
+                , { field: 'Name', title: '@T("名称")',width:180  }
+                , { field: 'SessionID', title: '@T("会话")',width:180  }
+                , { field: 'OAuthProvider', title: '@T("登录方")',width:140  }
+                , { field: 'Times', title: '@T("次数")',width:120  }
+                , { field: 'Page', title: '@T("页面")',width:100 }
+                , { field: 'Platform', title: '@T("平台")',minWidth:100 }
+                , { field: 'OS', title: '@T("系统")',minWidth:100 }
+                , { field: 'Device', title: '@T("设备")',minWidth:100 }
+                , { field: 'Brower', title: '@T("浏览器")',minWidth:100 }
+                , { field: 'NetType', title: '@T("网络")',minWidth:100 }
+                , { field: 'DeviceId', title: '@T("设备标识")',minWidth:100 }
+                , { field: 'Status', title: '@T("状态")',minWidth:100 }
+                , { field: 'OnlineTime', title: '@T("在线时间(秒)")',minWidth:100 }
+                , { field: 'LastError', title: '@T("最后错误")',minWidth:100 }
+                , { field: 'Address', title: '@T("地址")',minWidth:100 }
+                , { field: 'TraceId', title: '@T("追踪")',minWidth:100 }
+                , { field: 'CreateIP', title: '@T("创建地址")',minWidth:100 }
+                , { field: 'CreateTime', title: '@T("创建时间")',minWidth:100 }
+                , { field: 'UpdateIP', title: '@T("更新地址")',minWidth:100 }
+                , { field: 'UpdateTime', title: '@T("修改时间")',minWidth:100 }
                 // , { fixed: 'right', title: ' @T("操作")', toolbar: '#tool', width: 130 }
             ]]
             , limit: 13
@@ -114,14 +129,14 @@
         window.active = {
             reload: function () {
                 table.reload('tables',
-                    {
-                        where: {
-                            name: $("#name").val(),
-                        },
-                        page: {
-                            curr: 1
-                        }
-                    });
+                {
+                    where: {
+                        name: $("#name").val(),
+                    },
+                    page: {
+                        curr: 1
+                    }
+                });
             }
         }
 

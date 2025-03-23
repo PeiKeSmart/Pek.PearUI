@@ -111,7 +111,7 @@ public class OnlinTimeController : PekCubeAdminControllerX {
             e.Day29,
             e.Day30,
             e.Day31,
-            e.UpdateTime,
+            UpdateTime = e.UpdateTime.ToFullString(),
             UserName = e.User?.Name,
             RoleName = RoleLan.FindByRIdAndLId(e.RoleId, WorkingLanguage.Id, true).Name,
         });

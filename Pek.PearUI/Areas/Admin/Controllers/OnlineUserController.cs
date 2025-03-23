@@ -76,7 +76,7 @@ public class OnlineUserController : PekCubeAdminControllerX {
                 e.DeviceId,
                 e.Status,
                 e.OnlineTime,
-                e.LastError,
+                LastError = (e.LastError <= DateTime.MinValue ? String.Empty : e.LastError.ToFullString()),
                 e.Address,
                 e.TraceId,
                 e.CreateIP,

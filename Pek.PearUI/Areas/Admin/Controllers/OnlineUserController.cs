@@ -4,7 +4,6 @@ using DH.Entity;
 
 using Microsoft.AspNetCore.Mvc;
 
-using NewLife;
 using NewLife.Data;
 
 using Pek.Models;
@@ -54,32 +53,10 @@ public class OnlineUserController : PekCubeAdminControllerX {
             PageIndex = page,
             PageSize = limit,
             RetrieveTotalCount = true,
-            Sort = SysOnlineUsers._.Id,
+            Sort = UserOnline._.ID,
             Desc = true,
         };
-        var list = SysOnlineUsers.Search(null, pages).Select(e =>
-        {
-            var region = e.Region?.Split(',');
-            var regions = new List<String>();
-            foreach (var item in region)
-            {
-                regions.Add(LocaleStringResource.GetResource(item));
-            }
-
-            return new
-            {
-                e.Id,
-                e.Uid,
-                e.Sid,
-                NickName = $"{GetResource(e.NickName)}{(e.Name.Length > 0 ? $"({e.Name})" : "")}",
-                e.Ip,
-                Region = regions.Join(",") + $"_{GetResource(e.Network)}" + e.Numbers,
-                e.Clicks,
-                e.UserAgent,
-                e.Updatetime,
-                UserName = e.User?.Name
-            };
-        });
+        var list = UserOnline.Search(null!, pages);
 
         return Json(new { code = 0, msg = "success", count = pages.TotalCount, data = list });
     }

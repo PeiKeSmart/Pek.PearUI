@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11104.47 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pek.PearUI", "Pek.PearUI\Pek.PearUI.csproj", "{7EF3B2C7-60D9-FE0B-1C0B-B5CD76F3345E}"
 EndProject
@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		.github\copilot-instructions.md = .github\copilot-instructions.md
 		global.json = global.json
 		NuGet.config = NuGet.config
 		.github\workflows\publish-beta.yml = .github\workflows\publish-beta.yml

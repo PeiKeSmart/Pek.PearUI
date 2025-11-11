@@ -9,7 +9,7 @@ using NewLife.Cube.ViewModels;
 using NewLife.Log;
 
 using Pek.Models;
-using Pek.NCube;
+using Pek.NCube.BaseControllers;
 using Pek.Permissions.Identity.JwtBearer;
 using Pek.Security;
 

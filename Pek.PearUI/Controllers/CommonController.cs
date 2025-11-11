@@ -4,7 +4,7 @@ using NewLife;
 
 using Pek.Mime;
 using Pek.MVC;
-using Pek.NCube;
+using Pek.NCube.BaseControllers;
 using Pek.NCubeUI;
 using Pek.PearUI.Models;
 using Pek.Swagger;

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 
 using NewLife.Web;
-
-using Pek.NCube;
+using Pek.NCube.BaseControllers;
 using Pek.Webs;
 
 namespace Pek.PearUI.Common;

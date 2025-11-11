@@ -1,5 +1,5 @@
 ﻿using DH.Entity;
-
+using Pek.Configs;
 using Pek.Infrastructure;
 using Pek.VirtualFileSystem;
 
@@ -36,7 +36,7 @@ public class DHCubeStartup : IPekStartup {
     /// <param name="webHostEnvironment"></param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
-        if (!DHSetting.Current.IsInstalled)
+        if (!PekSysSetting.Current.IsInstalled)
         {
             var list = new List<Role>();
 
@@ -111,8 +111,8 @@ public class DHCubeStartup : IPekStartup {
                 Department.Meta.Cache.Clear("", true);
             }
 
-            DHSetting.Current.IsInstalled = true;
-            DHSetting.Current.Save();
+            PekSysSetting.Current.IsInstalled = true;
+            PekSysSetting.Current.Save();
         }
     }
 

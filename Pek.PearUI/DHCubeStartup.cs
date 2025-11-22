@@ -1,6 +1,9 @@
 ﻿using DH.Entity;
+
 using Pek.Configs;
+using Pek.Events;
 using Pek.Infrastructure;
+using Pek.NCubeUI.Events;
 using Pek.VirtualFileSystem;
 
 using XCode;
@@ -38,6 +41,10 @@ public class DHCubeStartup : IPekStartup {
     {
         if (!PekSysSetting.Current.IsInstalled)
         {
+            var _eventPublisher = NewLife.Model.ObjectContainer.Provider.GetPekService<IEventPublisher>();
+            // 消费菜单生成
+            _eventPublisher?.Publish(new InstallEvent());
+
             var list = new List<Role>();
 
             var modelrole = Role.FindByID(1);

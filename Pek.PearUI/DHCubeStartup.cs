@@ -74,13 +74,12 @@ public class DHCubeStartup : IPekStartup {
     /// <param name="webHostEnvironment"></param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
-        XTrace.WriteLine($"调测：{PekSysSetting.Current.IsInstalled}");
         if (!PekSysSetting.Current.IsInstalled)
         {
             var _eventPublisher = NewLife.Model.ObjectContainer.Provider.GetPekService<IEventPublisher>();
             // 系统安装生成
             _eventPublisher?.Publish(new InstallEvent());
-            XTrace.WriteLine($"调测1：{PekSysSetting.Current.IsInstalled}");
+            XTrace.WriteLine($"调测1：{PekSysSetting.Current.IsInstalled}：{_eventPublisher == null}");
 
             var list = new List<Role>();
 

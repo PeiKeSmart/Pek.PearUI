@@ -78,7 +78,7 @@ public class DHCubeStartup : IPekStartup {
         if (!PekSysSetting.Current.IsInstalled)
         {
             var _eventPublisher = NewLife.Model.ObjectContainer.Provider.GetPekService<IEventPublisher>();
-            // 消费菜单生成
+            // 系统安装生成
             _eventPublisher?.Publish(new InstallEvent());
             XTrace.WriteLine($"调测1：{PekSysSetting.Current.IsInstalled}");
 

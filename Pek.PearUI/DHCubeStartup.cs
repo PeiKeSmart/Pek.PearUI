@@ -2,6 +2,7 @@
 
 using NewLife;
 using NewLife.Common;
+using NewLife.Log;
 
 using Pek.Configs;
 using Pek.Events;
@@ -73,11 +74,13 @@ public class DHCubeStartup : IPekStartup {
     /// <param name="webHostEnvironment"></param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
+        XTrace.WriteLine($"调测：{PekSysSetting.Current.IsInstalled}");
         if (!PekSysSetting.Current.IsInstalled)
         {
             var _eventPublisher = NewLife.Model.ObjectContainer.Provider.GetPekService<IEventPublisher>();
             // 消费菜单生成
             _eventPublisher?.Publish(new InstallEvent());
+            XTrace.WriteLine($"调测1：{PekSysSetting.Current.IsInstalled}");
 
             var list = new List<Role>();
 

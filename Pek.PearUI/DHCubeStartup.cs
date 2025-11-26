@@ -1,5 +1,8 @@
 ﻿using DH.Entity;
 
+using NewLife;
+using NewLife.Common;
+
 using Pek.Configs;
 using Pek.Events;
 using Pek.Infrastructure;
@@ -21,7 +24,38 @@ public class DHCubeStartup : IPekStartup {
     /// <param name="application"></param>
     public void Configure(IApplicationBuilder application)
     {
+        // 修正系统名，确保可运行
+        var set = SysConfig.Current;
+        if (set.IsNew || set.Name == "DG.Web.Framework.Views" || set.DisplayName == "DG.Web.Framework.Views")
+        {
+            set.Name = "DG.Web.Framework";
+            set.DisplayName = "创楚平台";
+            set.Save();
 
+            var model = User.FindByName("admin");
+            if (model != null && model.Password == "21232F297A57A5A743894A0E4A801FC3")
+            {
+                model.RoleID = 1;
+                model.Enable = true;
+                model.Password = ManageProvider.Provider?.PasswordProvider.Hash("hlktechcom".MD5());
+                model.RegisterTime = DateTime.Now;
+                model.RegisterIP = Pek.Helpers.DHWeb.IP;
+                model.Ex1 = 1; //1是系统管理员用户
+                model.Save();
+            }
+
+            var modelDetail = UserDetail.FindById(model!.ID);
+            if (modelDetail == null)
+            {
+                modelDetail = new UserDetail
+                {
+                    Id = model.ID,
+                    TenantId = 1,
+                    DepartmentIds = ",1,"
+                };
+                modelDetail.Insert();
+            }
+        }
     }
 
     /// <summary>
@@ -137,6 +171,8 @@ public class DHCubeStartup : IPekStartup {
     /// <param name="options"></param>
     public void ConfigureVirtualFileSystem(DHVirtualFileSystemOptions options)
     {
+        options.FileSets.AddEmbedded<DHCubeStartup>(typeof(DHCubeStartup).Namespace);
+        // options.FileSets.Add(new EmbeddedFileSet(item.Assembly, item.Namespace));
     }
 
     /// <summary>

@@ -57,23 +57,7 @@ public class DHCubeStartup : IPekStartup {
                 modelDetail.Insert();
             }
         }
-    }
 
-    /// <summary>
-    /// 将区域路由写入数据库
-    /// </summary>
-    public void ConfigureArea()
-    {
-    }
-
-    /// <summary>
-    /// 添加并配置任何中间件
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="configuration"></param>
-    /// <param name="webHostEnvironment"></param>
-    public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
-    {
         if (!PekSysSetting.Current.IsInstalled)
         {
             var _eventPublisher = NewLife.Model.ObjectContainer.Provider.GetPekService<IEventPublisher>();
@@ -157,6 +141,24 @@ public class DHCubeStartup : IPekStartup {
             PekSysSetting.Current.IsInstalled = true;
             PekSysSetting.Current.Save();
         }
+    }
+
+    /// <summary>
+    /// 将区域路由写入数据库
+    /// </summary>
+    public void ConfigureArea()
+    {
+    }
+
+    /// <summary>
+    /// 添加并配置任何中间件
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <param name="webHostEnvironment"></param>
+    public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+    {
+        
     }
 
     /// <summary>

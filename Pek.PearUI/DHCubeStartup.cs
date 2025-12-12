@@ -7,7 +7,10 @@ using NewLife.Log;
 using Pek.Configs;
 using Pek.Events;
 using Pek.Infrastructure;
+using Pek.NCubeUI;
+using Pek.NCubeUI.Areas.Admin;
 using Pek.NCubeUI.Events;
+using Pek.PearUI.Areas.Admin.Controllers;
 using Pek.VirtualFileSystem;
 
 using XCode;
@@ -64,6 +67,7 @@ public class DHCubeStartup : IPekStartup {
     /// </summary>
     public void ConfigureArea()
     {
+        AreaBase.SetRoute<HomeController>(AdminArea.AreaName);
     }
 
     /// <summary>
